@@ -4,7 +4,7 @@
 		<servername>localhost</servername>
 		<username>prevrod_erod</username>
 		<password>Pr20150513_er#</password>
-		<dbname>prevrod_erod</dbname>
+		<dbname>prevrod_eroddemo</dbname>
 	</dbconnection>
 </core>
 
