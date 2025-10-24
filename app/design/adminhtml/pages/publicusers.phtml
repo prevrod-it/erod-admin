@@ -1,0 +1,51 @@
+<?php
+//Form filters
+if (isset($_POST['puser'])) {
+    $puserflt = $_POST['puser'];
+} else {
+    $puserflt = "";
+}
+if (isset($_POST['entity'])) {
+    $entityflt = $_POST['entity'];
+} else {
+    $entityflt = "";
+}
+if (isset($_POST['segment'])) {
+    $segmentflt = $_POST['segment'];
+} else {
+    $segmentflt = "0";
+}
+if (isset($_POST['utype'])) {
+    $utypeflt = $_POST['utype'];
+} else {
+    $utypeflt = "-1";
+}
+//Pagination
+if (isset($_POST['offset'])) {
+    $offset = $_POST['offset'];
+} else {
+    $offset = "0";
+}
+if (isset($_POST['limit'])) {
+    $limit = $_POST['limit'];
+} else {
+    $limit = "50";
+}
+//Sorting
+if (isset($_POST['sortfld'])) {
+    $sortfld = $_POST['sortfld'];
+} else {
+    $sortfld = "1";
+}
+
+$listfilter = array("puserflt" => $puserflt,"entityflt" => $entityflt,"segmentflt" => $segmentflt,"utypeflt" => $utypeflt);
+
+if ($id == "0") {
+    //Filters
+    include $core_elements->tree_struct()->templatedir->adminblock . "/publicusersfilter.phtml";
+    //Users list
+    include $core_elements->tree_struct()->templatedir->adminblock . "/publicuserslist.phtml";
+} else {
+    //Info
+    include $core_elements->tree_struct()->templatedir->adminblock . "/publicuserinfo.phtml";   
+}

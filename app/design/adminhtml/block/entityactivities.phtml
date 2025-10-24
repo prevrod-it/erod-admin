@@ -1,0 +1,42 @@
+<?php
+$users_count = $admin_lists->entityusers_list_count($id,0);
+if ($users_count < 3) {
+	$actlimit = 6;
+} elseif ($users_count >= 3 && $users_count < 10) {
+	$actlimit = 10;
+} else {
+	$actlimit = $users_count;
+}
+$lastentact_list = $admin_lists->entitylastact_list($id,$actlimit);
+$actimgdb = array(0 => "ico-rest.svg", 1 => "ico-driving.svg", 2 => "ico-altwork.svg", 3 => "ico-availability.svg");
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle"></th>
+	        	<th class="align-middle">Início</th>
+	        	<th class="align-middle">Fim</th>
+	        	<th class="align-middle">Duração</th>
+	        	<th class="align-middle">Nome</th>
+	        	<th class="align-middle">NIF</th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+	    foreach ($lastentact_list as $lastentact_item) {
+	    	$imgidx = $lastentact_item[0];
+	    	$actimg = "<img class=\"svg-ico\" src=\"/media/img/$actimgdb[$imgidx]\">";
+	    ?>
+		    <tr>
+		    	<td><?php echo $actimg; ?></td>
+		    	<td><?php echo $lastentact_item[1]; ?></td>
+		    	<td><?php echo $lastentact_item[2]; ?></td>
+		    	<td><?php echo $lastentact_item[3]; ?></td>
+		    	<td><?php echo $lastentact_item[4]; ?></td>
+		    	<td><?php echo $lastentact_item[5]; ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

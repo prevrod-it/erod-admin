@@ -1,0 +1,51 @@
+<?php
+$utype_list = $public_lists->pubusertype_list();
+?>
+<div class="container-fluid mb-2">
+    <div class="card">
+        <div class="card-header text-white bg-secondary">
+            Filtros
+        </div>
+        <div class="card-body">
+            <form action="publicusers" name="publicusers" id ="publicusers">
+                <input type="hidden" id = "offset" name="offset" value="<?php echo $offset;?>">
+                <input type="hidden" id = "limit" name="limit" value="<?php echo $limit;?>">
+                <input type="hidden" id = "sortfld" name="sortfld" value="<?php echo $sortfld;?>">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-lg px-1">
+                                <label class="sr-only" for="puser">Utilizador</label>
+                                <input type="text" class="form-control form-control-sm mb-2 list-filter" name="puser" id="puser" placeholder="Utilizador" value="<?php echo $puserflt; ?>">
+                            </div>
+                        </div>      
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row">    
+                            <div class="col-lg px-1">
+                                <label class="sr-only" for=uypeflt>Tipo de utilizador</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-text"><i class="fas fa-user-tag"></i></div>
+                                    <select class="form-control form-control-sm list-filter" name="utype" id="utype">
+                                        <option value="">-- Tipo de utilizador --</option>
+                                        <option value="-1"<?php echo ($utypeflt == "-1") ? " selected" : "" ?>>Todos os tipos</option>
+                                        <?php
+                                        foreach ($utype_list as $utype_item) {
+                                        ?>
+                                            <option value="<?php echo $utype_item[0]; ?>"<?php echo ($utype_item[0] == $utypeflt) ? " selected" : "" ?>><?php echo $utype_item[1]; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row">    
+                            <div class="col-lg px-1 text-end"><input type="button" class="btn btn-sm btn-danger list-filter-clear" value="Limpar"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

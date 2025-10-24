@@ -1,0 +1,38 @@
+<?php
+//$vehicles_list form parent page
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle text-start">
+	        		<a class="btn text-success p-0" data-bs-toggle="offcanvas" data-bs-target="#evehNew" aria-controls="offcanvasBottom"><i class="fas fa-plus-circle fa-2x"></i></a>
+	        		<!-- href="/public/vehicles/new/<?php echo $id; ?>" -->
+	        		<span>Viatura</span>
+	        	</th>
+	        	<th class="align-middle">Marca</th>
+	        	<th class="align-middle">Modelo</th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+    	foreach ($vehicles_list as $vehicles_item) {
+	    ?>
+		    <tr>
+		    	<td>
+		    		<a class="text-dark text-decoration-none text-nowrap" data-bs-toggle="offcanvas" data-bs-target="#eveh<?php echo $vehicles_item[0]; ?>" aria-controls="offcanvasBottom" href="">
+		    			<?php if($vehicles_item[6] == 1) { ?>
+		    			<i class="fas fa-truck text-success"></i>
+		    			<?php } else { ?>
+		    			<i class="fas fa-truck text-secondary"></i>
+		    			<?php } ?>
+		    			<span class="fw-bold ms-1"><?php echo $vehicles_item[2]; ?></span>
+		    		</a>
+		    	</td>
+		    	<td><?php echo $vehicles_item[4]; ?></td>
+		    	<td><?php echo $vehicles_item[5]; ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

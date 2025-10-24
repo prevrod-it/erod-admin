@@ -1,0 +1,46 @@
+<?php
+//$plans_list form parent page
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle text-start">
+	        		<a class="btn text-success p-0" data-bs-toggle="offcanvas" data-bs-target="#eplanNew" aria-controls="offcanvasBottom"><i class="fas fa-plus-circle fa-2x"></i></a>
+	        		<!-- href="/admin/plans/new/<?php echo $id; ?>" -->
+	        		<span>Licença</span>
+	        	</th>
+	        	<th></th>
+	        	<th class="align-middle">Utiliz.</th>
+	        	<th class="align-middle">Início</th>
+	        	<th class="align-middle">Fim</th>
+	        	<th class="align-middle">Pagamento</th>
+	        	<th></th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+    	foreach ($plans_list as $plans_item) {
+	    ?>
+		    <tr>
+		    	<td>
+		    		<a class="text-dark text-decoration-none text-nowrap" data-bs-toggle="offcanvas" data-bs-target="#eplan<?php echo $plans_item[0]; ?>" aria-controls="offcanvasBottom" href="">
+		    			<?php if($plans_item[8] == 1) { ?>
+		    			<i class="fas fa-check-circle text-success"></i>
+		    			<?php } else { ?>
+		    			<i class="fas fa-times-circle text-danger"></i>
+		    			<?php } ?>
+		    			<span class="fw-bold ms-1"><?php echo $plans_item[2]; ?></span>
+		    		</a>
+		    	</td>
+		    	<td><?php if ($plans_item[4]) { ?><i class="fas fa-wrench text-primary"></i><?php } ?></td>
+		    	<td><?php echo $plans_item[3]; ?></td>
+		    	<td><?php echo $plans_item[5]; ?></td>
+		    	<td><?php echo $plans_item[6]; ?></td>
+		    	<td><?php echo $paystates[$plans_item[7]]; ?></td>
+		    	<td><?php if ($plans_item[9] === true) { ?><i class="fas fa-link text-dark"></i><?php } else { ?><i class="fas fa-unlink text-secondary"></i><?php } ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

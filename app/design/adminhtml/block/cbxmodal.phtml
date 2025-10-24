@@ -1,0 +1,67 @@
+<div class="modal fade" id="<?php echo $modalid; ?>">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+	      	<!-- Modal Header -->
+	      	<div class="modal-header">
+	       		<h4 class="modal-title"><?php echo $modaltit; ?></h4>
+	        	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      	</div>
+      		<!-- Modal body -->
+     		<div class="modal-body">      			
+     		 	<!--div class="container">
+	     		 	<div class="row">
+						<div class="col-md-12 mb-2"-->
+							<?php if (count($curr_modal_list) > 0) { ?>
+							<div class="card mt-1 mb-3">
+								<div class="card-body">
+									<?php
+									$i = 0; 
+									foreach ($curr_modal_list as $curr_modal_item) {
+										echo ($i > 0) ? "<br>" : "";
+										echo  "<i class=\"far fa-check-circle me-2\"></i>" . $curr_modal_item;
+										$i++;
+									}
+									?>
+								</div>
+							</div>
+							<?php } ?>
+							<div class="card">
+								<div class="card-body">
+									<form id="<?php echo $cbxsetid; ?>" data-target="<?php echo $trgfield; ?>">
+									<fieldset<?php echo $editstatus; ?>>
+									<?php 
+									foreach ($modal_list as $modal_item) {
+										$cbxcheck = "";
+										$cbxord = 0; $cbxord_str = "";
+										foreach ($cbxc_arr as $key => $cbxc_item) {
+											if ($cbxc_item == $modal_item[0]) {
+												$cbxcheck = " checked";
+												$cbxord = $key + 1;
+												$cbxord_str = "(" . $cbxord . "º)";
+											}
+										}
+										$cbxid = $modal_item[0];
+									?>
+				                    	<div class="form-check">    
+				                        	<label class="form-check-label">
+										    	<input type="checkbox" class="form-check-input cbx-picker" value="<?php echo $modal_item[0]; ?>" data-ord="<?php echo $cbxord; ?>"<?php echo $cbxcheck;?>>
+										    	<span id= "lbl-<?php echo $modal_item[0]; ?>"><?php echo $modal_item[1]; ?></span>
+										    	<span id="ord-<?php echo $modal_item[0]; ?>" class="font-weight-bold font-italic"><?php echo $cbxord_str; ?></span>
+									  		</label>
+										</div> 
+				                    <?php } ?>
+				                    </fieldset>
+				                   	</form>
+								</div>
+							</div>
+						<!--/div>
+					</div>
+				</div-->
+	      	</div>
+	      	<!-- Modal footer -->
+	      	<div class="modal-footer">
+	       		<button type="button" class="btn btn-success" data-bs-dismiss="modal">Concluído</button>
+	      	</div>
+    	</div>
+  	</div>
+</div>

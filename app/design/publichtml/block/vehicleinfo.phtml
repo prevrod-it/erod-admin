@@ -1,0 +1,77 @@
+<?php
+$formcssid = "vehicle-insert-form" . $vehicles_item[0];
+?>
+<div class="container-fluid mb-3">
+	<div class="card">
+		<!--div class="card-header text-white bg-success">
+			<?php echo $vehicles_item[2]; ?>
+		</div-->
+		<div class="card-body">
+			
+			<form id="<?php echo $formcssid; ?>" action="pubadminvehicles.php" class="needs-validation refresh-on-success" callbackurl="/admin/company" novalidate>
+	            <input type="hidden" name="itemid" id="itemid" value="<?php echo $vehicles_item[0]; ?>">
+                <input type="hidden" name="userid" id="userid" value="<?php echo $puser; ?>">
+                <input type="hidden" name="formaction" id="formaction" value="update">
+
+                <input type="hidden" name="entity" id="entity" value="<?php echo $vehicles_item[1]; ?>">
+	                          
+	            <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="regnum">Matrícula</label>    
+                            <input type="text" class="form-control" id="regnum" name="regnum" placeholder="Matrícula da viatura" value="<?php echo $vehicles_item[2]; ?>">
+                            <div id="regnum_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="vehbrand">Marca</label>
+                            <select class="form-control" name="vehbrand" id="vehbrand">
+                                <option value="0"<?php echo ($vehicles_item[3] == 0) ? " selected" : ""; ?>>Sem marca</option>
+                                <?php
+                                foreach ($vehbrands_list as $vehbrands_item) {
+                                ?>
+                                <option value="<?php echo $vehbrands_item[0]; ?>"<?php echo ($vehbrands_item[0] == $vehicles_item[3]) ? " selected" : ""; ?>>
+                                    <?php echo $vehbrands_item[1]; ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                            <div id="vehbrand_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="vehmodel">Modelo (opcional)</label>    
+                            <input type="text" class="form-control" id="vehmodel" name="vehmodel" placeholder="Modelo da viatura" value="<?php echo $vehicles_item[5]; ?>">
+                            <div id="vehmodel_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1"<?php echo ($vehicles_item[6] == 1) ? " selected" : ""; ?>>Ativa</option>
+                                <option class="bg-light" value="0"<?php echo ($vehicles_item[6] == 0) ? " selected" : ""; ?>>Suspensa</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"><!-- Empty --></div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-danger w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-delete"><i class="far fa-trash-alt"></i></button>
+                    </div>
+  				</div>
+
+    			<div class="row">
+    				<div class="col-md-12">
+    					<div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+    				</div>
+    			</div>
+	        </form>
+
+		</div>
+	</div>
+</div>

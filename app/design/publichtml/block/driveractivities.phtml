@@ -1,0 +1,169 @@
+<div id="swipeboard" class="carousel slide" data-bs-touch="true" data-bs-interval="false">
+    <div class="carousel-inner">
+        <div class="carousel-item appswipe">
+            <div class="container pt-1 pb-2">
+                <div class="row mt-2">
+                    <div class="col-12 fs-5 fw-bold">Informação do empregador</div>
+                </div>
+                <div class="row mt-1">
+                    <div id="companyinfo" class="col-12"></div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 fs-5 fw-bold">Informação do produtor</div>
+                </div>
+                <div class="row mt-1">
+                    <div id="devinfo" class="col-12">
+                        Esta aplicação foi desenvolvida e é mantida pela Prevrod - Consultadoria, Lda., com NIF 513539352 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item appswipe">    
+            <div class="container pt-1 pb-2">
+                <div class="row mt-2">
+                    <div class="col-12 fs-5 fw-bold">Informação do trabalhador</div>
+                </div>
+                <div class="row mt-1">
+                    <div id="driverinfo" class="col-12"></div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item appswipe active">    
+            <div class="container pt-1 pb-2 act-btn-node">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-4 px-0"><button type="button" id="act1" class="btn border border-3 m-1" btnaction="act-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/driving.svg"></button></div>
+                            <div class="col-4 px-0"><button type="button" id="act2"class="btn border border-3 m-1" btnaction="act-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/altwork.svg"></button></div>
+                            <div class="col-4 px-0"><button type="button" id="act3" class="btn border border-3 m-1" btnaction="act-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/availability.svg"></button></div>
+                        </div>           
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-4 px-0"><button type="button" id="val4" class="btn border border-3 m-1 bg-disabled" btnaction="val-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/switchcar.svg"></button></div>
+                            <div class="col-4 px-0"><button type="button" id="3pw5" class="btn border border-3 m-1 bg-disabled" btnaction="3pw-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/3rdpartytwork.svg"></button></div>
+                            <div class="col-4 px-0"><button type="button" id="act0" class="btn border border-3 m-1" btnaction="act-mark"><img class="img-fluid" src="<?php echo $img_path; ?>/rest.svg"></button></div>
+                        </div>           
+                    </div>
+                </div>
+                <div class="row pt-4">
+                    <div id="actclockwrp" class="col-12 d-flex justify-content-center">
+                        <i class="fa-solid fa-stopwatch fa-2x me-2"></i>
+                        <div id="actclock" class="align-self-center fs-1 fw-bold">00:00:00</div>
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-12 text-center"><i class="fa-solid fa-truck-moving me-2"></i><span id="vehcurrent" class="fs-5 fw-bold">__-__-__</span></div>
+                </div>
+                <div class="row pt-3">
+                    <div class="col-12 d-flex justify-content-center">
+                        <!--i class="fa-solid fa-clock text-primary pt-1 me-2"></i-->
+                        <img class="svg-ico" src="/media/img/ico-rest.svg">
+                        <div id="rstclock" class="align-self-center fs-5 fw-bold">00:00:00</div>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-5 d-flex justify-content-center">
+                        <!--i class="fa-solid fa-clock text-danger pt-1 me-2"></i-->
+                        <img class="svg-ico" src="/media/img/ico-driving.svg">
+                        <div id="drvclock" class="align-self-center fs-5 fw-bold">00:00:00</div>
+                    </div>
+                    <div class="col-7 d-flex justify-content-center">
+                        <!--i class="fa-solid fa-clock text-danger pt-1 pe-1"></i-->
+                        <!--i class="fa-solid fa-clock text-success pt-1 me-2"></i-->
+                        <img class="svg-ico" src="/media/img/ico-driving.svg">
+                        <img class="svg-ico" src="/media/img/ico-altwork.svg">
+                        <div id="dawclock" class="align-self-center fs-5 fw-bold">00:00:00</div>
+                    </div>
+                </div>   
+            </div>
+        </div>
+        <div class="carousel-item appswipe overflow-scroll">
+            <div class="container pt-1 pb-2">
+                <div class="row mt-2">
+                    <div class="col-12 text-center fs-4 fw-bold">Registo de atividades (15d)</div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 text-center fs-4 fw-bold"><button type="button" class="btn btn-warning" btnaction="send-report">Enviar por e-mail<i class="fa-regular fa-envelope ps-3"></i></button></div>
+                </div>
+                <div class="row mt-3">
+                    <div id="jrnreport" class="col-12 ms-2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item appswipe overflow-scroll">
+            <div class="container pt-1 pb-2">
+                <div class="row mt-2">
+                    <div class="col-12 text-center fs-4 fw-bold">Anotações (15d)</div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 text-center fs-4 fw-bold"><button type="button" class="btn btn-warning" btnaction="rmk-add">Inserir anotação<i class="fa-solid fa-pen-to-square ps-3"></i></button></div>
+                </div>
+                <div class="row mt-3">
+                    <div id="rmkreport" class="col-12 ms-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enviar relatório de atividades por e-mail (MODAL) -->
+<div class="modal fade" id="sendrptInterface" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rptModTit">Enviar relatório</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancelar"></button>
+            </div>
+            <form id="reportForm" action="reportapi.php" class="needs-validation" novalidate>
+                <input type="hidden" name="userid" id="userid" value="<?php echo $puser; ?>">
+                <input type="hidden" name="qaction" id="qaction" value="emlreport">
+                <div class="modal-body">     
+                    <div class="form-group">    
+                        <label for="rptType" class="col-form-label-sm" id="rptTypeLbl">Tipo de relatório</label>
+                        <select name="rptType" class="form-control form-control-sm mb-2" id="rptType">
+                            <option value="0" selected>Fiscalização</option>
+                            <option value="1" >Entidade empregadora</option>
+                            <option value="2" >Trabalhador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rptEmail" class="col-form-label-sm" id="rptEmailLbl">e-mail para envio</label>
+                        <input type="email" name="rptEmail" class="form-control form-control-sm mb-2" id="rptEmail">
+                        <div id="rptEmail_warn" class="invalid-feedback"></div>
+                    </div>
+                    <div class="alert alert-secondary text-secondary mt-3 p-2 d-none" id="form_status"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" btnaction="form-send">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Adicionar anotação autónoma (MODAL) -->
+<div class="modal fade" id="remarkInterface" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rptModTit">Adicionar anotação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancelar"></button>
+            </div>
+            <div class="modal-body">
+            <form id="remarkForm">     
+                <div class="form-group">
+                    <label for="remark" class="col-form-label-sm" id="remarkLbl">Anotação</label>
+                    <input type="remark" name="remark" class="form-control form-control-sm mb-2" id="remark">
+                </div>
+                <div class="alert alert-secondary text-secondary mt-3 p-2 d-none" id="form_status"></div>
+            </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" btnaction="rnk-action">Adicionar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+<?php
+$sessioninfo = $admin_info->get_session($user,$session);
+?>
+Utilizador: <strong><?php echo $sessioninfo[0]; echo ($groupid == "0") ? " - Administrador" : ""; ?></strong> - Sessão iniciada em: <?php echo $sessioninfo[1]; ?> - (<a class="simple-link" href="/index.php?role=admin&pg=logout">Terminar sessão</a>)

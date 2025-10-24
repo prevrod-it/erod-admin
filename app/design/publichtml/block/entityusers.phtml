@@ -1,0 +1,55 @@
+<?php
+$users_list = $public_lists->entityusers_list($companyid,0);
+$actimgdb = array(0 => "ico-rest.svg", 1 => "ico-driving.svg", 2 => "ico-altwork.svg", 3 => "ico-availability.svg");
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle text-start">
+	        		<a class="btn text-success p-0" data-bs-toggle="offcanvas" data-bs-target="#pubuserNew" aria-controls="offcanvasBottom"><i class="fas fa-plus-circle fa-2x"></i></a>
+	        		<!-- href="/public/publicusers/new/<?php echo $id; ?>" -->
+	        		<span>Nome</span>
+	        	</th>
+	        	<th class="align-middle">NIF</th>
+	        	<th class="align-middle">Tipo</th>
+	        	<th class="align-middle">Subsc.</th>
+	        	<th class="align-middle">Última comutação</th>	
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+    	foreach ($users_list as $users_item) {
+    		$fullname_arr = explode(" ",$users_item[2]);
+    		$nwcount = count($fullname_arr);
+    		if ($nwcount > 2) {
+    			$abvr_name = $fullname_arr[0] . " " . $fullname_arr[$nwcount - 1]; 
+    		} else {
+    			$abvr_name = $users_item[2];
+    		}
+    		$actinfo = $public_data->get_pubuser_lastactinfo($users_item[0]);
+    		if (!is_null($actinfo)) {
+    			$imgidx = $actinfo[0];
+    			$actimg = "<img class=\"svg-ico me-2\" src=\"/media/img/$actimgdb[$imgidx]\">";
+    			$infostr = $actimg . $actinfo[1] . " (" . $actinfo[2] . ")";
+    		} else {
+    			$infostr = "Sem atividades";
+    		}
+	    ?>
+		    <tr>
+		    	<td>
+		    		<a class="text-dark text-decoration-none text-nowrap" href="/public/publicusers/<?php echo $users_item[0]; ?>">
+		    			<?php if ($users_item[1] == 1) { ?><i class="fas fa-user-cog <?php echo ($users_item[6] == 1) ? "text-primary" : "text-secondaryy"; ?>"></i></i><?php } ?>
+		    			<?php if ($users_item[1] > 1) { ?><i class="fas fa-user-edit <?php echo ($users_item[6] == 1) ? "text-success" : "text-secondaryy"; ?>"></i><?php } ?>
+		    			<span class="fw-bold ms-1"><?php echo $abvr_name; ?></span>
+		    		</a>
+		    	</td>
+		    	<td><?php echo $users_item[3]; ?></td>
+		    	<td><?php echo $users_item[4]; ?></td>
+		    	<td><?php echo $users_item[5]; ?></td>
+		    	<td><?php echo $infostr; ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

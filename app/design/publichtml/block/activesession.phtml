@@ -1,0 +1,4 @@
+<?php
+$sessioninfo = $public_info->get_session($puser,$psession);
+?>
+Utilizador: <strong><?php echo $sessioninfo[0]; echo " - Administrador"; ?></strong> - Sessão iniciada em: <?php echo $sessioninfo[1]; ?> - (<a class="simple-link" href="/index.php?role=public&pg=logout">Terminar sessão</a>)

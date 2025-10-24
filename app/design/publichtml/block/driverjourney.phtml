@@ -1,0 +1,97 @@
+<div class="container py-2">
+    <div class="row">
+        <div class="col-7 text-start pe-3">
+            <button type="button" class="btn btn-secondary w-100" style="font-size:0.9em" btnaction="jrn-mark">&nbsp;</button>
+        </div>
+        <div class="col-5 d-flex justify-content-center ps-0">
+            <div id = "rtclock" class="align-self-center pt-1 fs-3 fw-bold"></div>
+            <span class="align-self-center pt-1 ps-2"><i class="fa-solid fa-wifi text-success" id="constatus"></i></span>
+        </div>
+    </div>
+</div>
+
+<!-- Loading (MODAL) -->
+<div class="modal fade" id="loadingInterface" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
+        <div class="spinner-border text-white" style="width: 6rem; height: 6rem" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+<!-- Iniciar/finalizar jornada (MODAL) -->
+<div class="modal fade" id="journeyInterface" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jrnModTit">Jornada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancelar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="journeyForm">
+                    <span class="mb-2 d-none" id="jrnStart"></span>
+                    <label for="jrnLocType" class="col-form-label-sm" id="jrnLocTypeLbl">Localização</label>
+                    <select name="jrnLocType" class="form-control form-control-sm mb-2" id="jrnLocType">
+                        <option value="0" selected>Sede</option>
+                        <option value="1" >Unidade operacional</option>
+                        <option value="2">Domicílio do trabalhador</option>
+                        <option value="3">Outro local</option>
+                    </select>
+                    <input type="text" name="jrnLoc" class="form-control form-control-sm mb-2" id="jrnLoc" value="" readonly>
+                    <label for="jrnType" class="col-form-label-sm d-none" id="jrnTypeLbl">Tipo de jornada</label>
+                    <select name="jrnType" class="form-control form-control-sm mb-2 d-none" id="jrnType">
+                        <option value="0" selected>Condutor único</option>
+                        <option value="1">Condução em dupla</option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success d-none" btnaction="jrn-action">Ação</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alocar/trocar veívulo (MODAL) -->
+<div class="modal fade" id="vehallocInterface" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="valModTit">Viatura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancelar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="journeyForm">
+                    <span class="mb-2 fw-bold d-none" id="valCurVeh"></span>
+                    <label for="valVehId" class="col-form-label-sm" id="valVehIdLbl">Viatura a atribuir</label>
+                    <select name="valVehId" class="form-control form-control-sm mb-2" id="valVehId">
+                        <option value="-1">Sem viatura (desatribuir)</option>
+                        <option value="0">Outra viatura (adicionar)</option>
+                    </select>
+                    <input type="text" name="valVeh" class="form-control form-control-sm mb-2" id="valVeh" value="" readonly> 
+                    <div class="row">
+                        <div class="col-6 d-none" id="valendKmsCol">
+                            <label for="valendKms" class="col-form-label-sm" id="valendKmsLbl">Kms viatura atual</label>
+                            <input type="number" name="valendKms" class="form-control form-control-sm mb-2" id="valendKms" value="0">
+                        </div>
+                        <div class="col-6" id="valKmsCol">
+                            <label for="valKms" class="col-form-label-sm" id="valKmsLbl">Kms nova viatura</label>
+                            <input type="number" name="valKms" class="form-control form-control-sm mb-2" id="valKms" value="0">
+                        </div>
+                    </div>           
+                    <label for="valLocType" class="col-form-label-sm" id="valLocTypeLbl">Localização</label>
+                    <select name="valLocType" class="form-control form-control-sm mb-2" id="valLocType">
+                        <option value="0" selected>Sede</option>
+                        <option value="1" >Unidade operacional</option>
+                        <option value="2">Domicílio do trabalhador</option>
+                        <option value="3">Outro local</option>
+                    </select>
+                    <input type="text" name="valLoc" class="form-control form-control-sm mb-2" id="valLoc" value="" readonly>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger d-none" btnaction="val-action">Ação</button>
+            </div>
+        </div>
+    </div>
+</div>

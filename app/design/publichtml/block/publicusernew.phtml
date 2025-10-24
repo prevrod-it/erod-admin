@@ -1,0 +1,226 @@
+<?php
+$newusermodalvis = "";
+$no_seg_arr = array("0");
+$entity_segment_list = $public_lists->entity_segment_list($companyid);
+$user_status_desc = array("Suspenso","Ativo");
+$opunits_usr_list = $public_lists->entityopus_select_list($companyid);
+$usertype_list = $public_lists->pubusertype_list();
+$subsctype_list = $public_lists->pubusersubsc_type_list();
+$subsstatus_list = $public_lists->pubusersubsc_status_list();
+$formcssid = "pubuser-insert-form";
+?>
+
+<div class="container-fluid mb-3">
+    <div class="card">
+        <!--div class="card-header text-white bg-success">
+            Novo utilizador / trabalhador
+        </div-->
+        <div class="card-body">
+            
+            <form id="<?php echo $formcssid; ?>" action="pubadminpubusers.php" class="needs-validation refresh-on-success" autocomplete="off" novalidate>
+            <fieldset>
+                <input type="hidden" name="itemid" id="itemid" value="0">
+                <input type="hidden" name="userid" id="userid" value="<?php echo $puser; ?>">
+                <input type="hidden" name="formaction" id="formaction" value="insert">
+                
+                <input type="hidden" name="entityid" id="entityid" value="<?php echo $companyid; ?>">
+                <input type="hidden" name="segment" id="newusersegment" value="[0]">
+
+                <input type="hidden" name="subsctype" id="subsctype" value="1">
+                
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="name">Nome</label>    
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Nome" value="">
+                            <div id="name_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="taxid">NIF</label>  
+                            <input type="text" class="form-control" id="taxid" name="taxid" placeholder="NIF" value="">
+                            <div id="taxid_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="type">Tipo de utilizador</label>
+                            <select class="form-control" name="type" id="type">
+                                <?php
+                                foreach ($usertype_list as $usertype_item) {
+                                ?>
+                                <option value="<?php echo $usertype_item[0]; ?>"<?php echo ($usertype_item[0] == 2) ? " selected" : ""; ?>><?php echo $usertype_item[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                            <div id="type_warn" class="invalid-feedback"></div>
+                        </div>    
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="address">Morada</label> 
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Morada" value="">
+                            <div id="address_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="zipcode">Código postal</label>  
+                            <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="xxxx-yyy" value="">
+                            <div id="zipcode_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="ziploc">Localidade</label>  
+                            <input type="text" class="form-control" id="ziploc" name="ziploc" placeholder="Localidade" value="">
+                            <div id="ziploc_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="email">e-mail</label>  
+                            <input type="text" class="form-control" id="email" name="email" placeholder="x@yyy.com" value="">
+                            <div id="email_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="tel">Telefone</label>  
+                            <input type="text" class="form-control" id="tel" name="tel" placeholder="Telefone" value="">
+                            <div id="tel_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="opunit">Unidade operacional</label>
+                            <select class="form-control" name="opunit" id="opunit">
+                                <option value="0">Sede</option>
+                                <?php
+                                foreach ($opunits_usr_list as $opunits_item) {
+                                ?>
+                                <option value="<?php echo $opunits_item[0]; ?>"><?php echo $opunits_item[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                            <div id="opunit_warn" class="invalid-feedback"></div>
+                        </div>  
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="driverlic">Carta de condução</label>
+                            <input type="text" class="form-control" id="driverlic" name="driverlic" placeholder="Mº carta de condução" value="">
+                            <div id="driverlic_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="contractini">Início de contrato</label>
+                            <input type="text" class="form-control" id="contractini" name="contractini" placeholder="dd/mm/aaaa" value="">
+                            <div id="contractini_warn" class="invalid-feedback"></div>            
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="subsctype">Tipo de subscrição</label>
+                            <select class="form-control" disabled>
+                                <?php
+                                foreach ($subsctype_list  as $subsctype_item) {
+                                ?>
+                                <option value="<?php echo $subsctype_item[0]; ?>"<?php echo ($subsctype_item[0] == 1) ? " selected" : ""; ?>><?php echo $subsctype_item[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="subscstatus">Estado da subscrição</label>
+                            <select class="form-control" name="subscstatus" id="subscstatus">
+                                <?php
+                                foreach ($subsstatus_list as $subsstatus_item) {
+                                ?>
+                                <option value="<?php echo $subsstatus_item[0]; ?>"><?php echo $subsstatus_item[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                            <div id="subscstatus_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label>Segmento (principal)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="mainsegment" value="Não definido" disabled>
+                                <div class="input-group-text">
+                                    <a class="text-dark" data-bs-toggle="modal" data-bs-target="#newusersegModal"><i class="far fa-list-alt"></i></a>
+                                </div>
+                                <div id="mainsegment_warn" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="puserpwd">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="puserpwd" name="puserpwd" placeholder="Password" value="" autocomplete="new-password">
+                                <div class="input-group-text">
+                                    <a class="text-dark" data-bs-toggle="shpassword" data-bs-target="#puserpwd"><i class="fas fa-eye"></i></a>
+                                </div>
+                                <div id="puserpwd_warn" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1">Ativo</option>
+                                <option class="bg-light" value="0">Suspenso</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>  
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="expdate">Data de expiralão</label>
+                            <input type="text" class="form-control" id="expdate" name="expdate" placeholder="dd/mm/aaaa" value="">
+                            <div id="expdate_warn" class="invalid-feedback"></div>            
+                         </div>
+                    </div>
+                    <div class="col-md-7 mb-2"><!-- empty --></div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+                    </div>
+                </div>
+            </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+        
+<div id="js-companydata" class="d-none">
+    <input type="hidden" id="js-entityname" value="<?php echo $entity_data[3]; ?>">
+    <input type="hidden" id="js-entitytaxid" value="<?php echo $entity_data[4]; ?>">
+    <input type="hidden" id="js-entityaddress" value="<?php echo $entity_data[5]; ?>">
+    <input type="hidden" id="js-entityzipcode" value="<?php echo $entity_data[6]; ?>">
+    <input type="hidden" id="js-entityziploc" value="<?php echo $entity_data[7]; ?>">
+    <input type="hidden" id="js-entityemail" value="<?php echo $entity_data[8]; ?>">
+    <input type="hidden" id="js-entitytel" value="<?php echo $entity_data[9]; ?>">    
+</div>

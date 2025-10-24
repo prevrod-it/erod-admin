@@ -1,0 +1,100 @@
+<?php
+$tot_inlist = $admin_lists->publicusers_list_count($groupid,$listfilter);
+$publicusers_list = $admin_lists->publicusers_list($groupid,$listfilter,$offset,$limit,$sortfld);
+$actimgdb = array(0 => "ico-rest.svg", 1 => "ico-driving.svg", 2 => "ico-altwork.svg", 3 => "ico-availability.svg");
+
+//Pagination
+$formref = "publicusers";
+$tot_pgs = ceil($tot_inlist/$limit);
+$tot_cpgs = intdiv($tot_inlist,$limit);
+if ($tot_pgs > 0) {
+	$max_offset = ($tot_pgs-1)*$limit;
+} else {
+	$max_offset = 0;
+} 
+$cur_pg = ($offset/$limit)+1;
+if ($cur_pg == 1) {
+	$pg1 = $cur_pg; $of1 = $offset; 
+	$pg2 = $cur_pg+1; $of2 = $offset+$limit;
+	$pg3 = $cur_pg+2; $of3 = $offset+(2*$limit);
+} elseif (($cur_pg > 1 && $cur_pg < $tot_pgs) || $tot_pgs == 2) {
+	$pg1 = $cur_pg-1; $of1 = $offset-$limit;
+	$pg2 = $cur_pg; $of2 = $offset;
+	$pg3 = $cur_pg+1; $of3 = $offset+$limit;
+} else {
+	$pg1 = $cur_pg-2; $of1 = $offset-(2*$limit);
+	$pg2 = $cur_pg-1; $of2 = $offset-$limit;
+	$pg3 = $cur_pg; $of3 = $offset;
+} 
+$ofi = 0; $ofl = $max_offset;
+?>
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header text-white bg-success">
+			Utilizadores
+		</div>
+		<div class="card-body">
+			
+			<!-- Pagination -->
+			<?php include $core_elements->tree_struct()->templatedir->adminblock . "/paginationtop.phtml"; ?>
+					
+			<div class="table-responsive">
+				<table class="table table-hover table-condensed">
+				    <thead>
+				     	<tr>
+				        	<th class="align-middle text-center">Ref.</th>
+				        	<th class="align-middle">
+				        		Utilizador
+				        		<!-- Sort field 1 -->
+				        		<?php if (abs($sortfld) == 1) { ?>
+				        		<button type="button" class="btn btn-link text-dark" form="publicusers" data-sortfld="<?php echo ($sortfld > 0) ? "-1" : "1"; ?>">
+				        			<i class="fas fa-arrow-circle-<?php echo ($sortfld > 0) ? "up" : "down"; ?>"></i>
+				        		</button>
+				        		<?php } else { ?>
+				        		<button type="button" class="btn btn-link text-dark" form="publicusers" data-sortfld="1">
+				        			<i class="far fa-circle"></i>
+				        		</button>
+				        		<?php } ?>
+				        	</th>
+				        	<th class="align-middle">NIF</th>
+				        	<th class="align-middle">Empresa</th>
+				        	<th class="align-middle">Unidade Operacional</th>
+				        	<th class="align-middle">Tipo</th>
+				        	<th class="align-middle">Última comutação</th>
+				        	<th class="align-middle">Tipo de subscrição</th>
+				        	<th class="align-middle">Estado da subscrição</th>
+				      	</tr>
+				    </thead>
+				    <tbody>
+				    <?php
+				    foreach ($publicusers_list as $publicusers_item) {
+				    	$actinfo = $admin_data->get_pubuser_lastactinfo($publicusers_item[0]);
+			    		if (!is_null($actinfo)) {
+			    			$imgidx = $actinfo[0];
+			    			$actimg = "<img class=\"svg-ico me-2\" src=\"/media/img/$actimgdb[$imgidx]\">";
+			    			$infostr = $actimg . $actinfo[1] . " (" . $actinfo[2] . ")";
+			    		} else {
+			    			$infostr = "Sem atividades";
+			    		}
+				    ?>
+					    <tr>
+					    	<td><a class="btn btn-<?php echo ($publicusers_item[9] == "1") ? "success" : "secondary"; ?> text-light text-nowrap" href="/admin/publicusers/<?php echo $publicusers_item[0]; ?>"><?php echo $publicusers_item[1]; ?></a></td>
+					    	<td><a class="text-dark text-decoration-none font-weight-bold" href="/admin/publicusers/<?php echo $publicusers_item[0]; ?>"><?php echo $publicusers_item[2]; ?></a></td>
+					    	<td><?php echo $publicusers_item[3]; ?></td>
+					    	<td><?php echo $publicusers_item[4]; ?></td>
+					    	<td><?php echo $publicusers_item[5]; ?></td>
+					    	<td><?php echo $publicusers_item[6]; ?></td>
+					    	<td><?php echo $infostr; ?></td>
+					    	<td><?php echo $publicusers_item[7]; ?></td>
+					    	<td><?php echo $publicusers_item[8]; ?></td>
+					    </tr>
+					<?php } ?>
+				    </tbody>
+				</table>
+			</div>
+			
+			<!-- Pagination -->
+			<?php include $core_elements->tree_struct()->templatedir->adminblock . "/paginationbottom.phtml"; ?>	
+		</div>
+	</div>
+</div>

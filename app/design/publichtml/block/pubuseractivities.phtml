@@ -1,0 +1,82 @@
+<?php
+$lastpubuseract_list = $public_lists->pubuserlastact_list($id,15);
+$actimgdb = array(0 => "ico-rest.svg", 1 => "ico-driving.svg", 2 => "ico-altwork.svg", 3 => "ico-availability.svg");
+$actcolordb = array(0 => "#0d6efd", 1 => "#dc3545", 2 => "#198754", 3 => "#ffc107");
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle" style="max-width: 50px; width: 50px"></th>
+	        	<th class="align-middle" style="max-width: 200px; width: 200px"></th>
+	        	<th class="align-middle">Início</th>
+	        	<th class="align-middle">Fim</th>
+	        	<th class="align-middle">Duração</th>
+	        	<th class="align-middle">Viatura</th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+	    $nextjrnid = 0;
+	    $nextjrnstart = date("d-m-Y H:i");
+	    $nextjrnend = date("d-m-Y H:i");
+	    foreach ($lastpubuseract_list as $lastpubuseract_item) {
+	    	$imgidx = $lastpubuseract_item[0];
+	    	$actimg = "<img class=\"svg-ico\" src=\"/media/img/$actimgdb[$imgidx]\">";
+	    	$actcolormk = "border-left: 5px solid " . $actcolordb[$imgidx];
+	    ?>
+		    <?php if ($lastpubuseract_item[8] == 1 && $nextjrnid == 0) { ?>
+		    <tr class="table-secondary" style="border-left: 5px solid <?php echo $actcolordb[0]; ?>">
+		    	<td class="ps-3"><i class="fa-solid fa-circle-stop text-secondary"></i></td>
+		    	<td class="text-secondary fw-bold">Jornada terminada</td>
+		   		<td></td>
+		   		<td><?php echo $lastpubuseract_item[6]; ?></td>
+		   		<td><?php echo $lastpubuseract_item[7]; ?></td>
+		   		<td></td>
+		    </tr>	
+		    <?php } ?>	
+		    <?php if ($lastpubuseract_item[4] <> $nextjrnid && $nextjrnid > 0) { ?>
+		    <tr class="table-primary" style="border-left: 5px solid <?php echo $actcolordb[0]; ?>">
+		    	<td class="ps-3"><i class="fa-solid fa-circle-play text-secondary"></i></td>
+		    	<td class="text-secondary fw-bold">Jornada iniciada</td>
+		   		<td><?php echo $nextjrnstart; ?></td>
+		   		<td class="px-3"><?php echo ($lastpubuseract_item[8] == 0) ? "<div class=\"spinner-border spinner-border-sm text-info ms-4\" role=\"status\"><span class=\"visually-hidden\">A decorrer...</span></div>" : ""; ?></td>
+		   		<td></td>
+		   		<td></td>
+		    </tr>
+		    <tr class="table-secondary" style="border-left: 5px solid <?php echo $actcolordb[0]; ?>">
+		    	<td class="ps-3"><i class="fa-solid fa-circle-stop text-secondary"></i></td>
+		    	<td class="text-secondary fw-bold">Jornada terminada</td>
+		   		<td></td>
+		   		<td><?php echo $lastpubuseract_item[6]; ?></td>
+		   		<td><?php echo $lastpubuseract_item[7]; ?></td>
+		   		<td></td>
+		    </tr>
+			<?php } ?>
+		    <tr style="<?php echo $actcolormk; ?>">
+		    	<td></td>
+		    	<td class="ps-3"><?php echo $actimg; ?></td>
+		    	<td><?php echo $lastpubuseract_item[1]; ?></td>
+		    	<td><?php echo $lastpubuseract_item[2]; ?></td>
+		    	<td><?php echo $lastpubuseract_item[3]; ?></td>
+		    	<td><?php echo $lastpubuseract_item[9]; ?></td>
+		    </tr>
+		<?php 
+			$nextjrnid = $lastpubuseract_item[4];
+			$nextjrnstart = $lastpubuseract_item[5];
+			$nextjrnend = $lastpubuseract_item[6];
+		} 
+		?>
+		<?php if (count($lastpubuseract_list) > 0) { ?>
+			<tr class="table-primary" style="border-left: 5px solid <?php echo $actcolordb[0]; ?>">
+		    	<td class="ps-3"><i class="fa-solid fa-circle-play text-secondary"></i></td>
+		    	<td class="text-secondary fw-bold">Jornada iniciada</td>
+		   		<td><?php echo $lastpubuseract_item[5]; ?></td>
+		   		<td></td>
+		   		<td></td>
+		   		<td></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

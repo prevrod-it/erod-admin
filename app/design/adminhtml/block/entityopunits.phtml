@@ -1,0 +1,40 @@
+<?php
+//$opunits_list form parent page
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle text-start">
+	        		<a class="btn text-success p-0" data-bs-toggle="offcanvas" data-bs-target="#opuNew" aria-controls="offcanvasBottom"><i class="fas fa-plus-circle fa-2x"></i></a>
+	        		<!-- href="/admin/opus/new/<?php echo $id; ?>" -->
+	        		<span>Unidade operacional</span>
+	        	</th>
+	        	<th class="align-middle">Locakidade</th>
+	        	<th class="align-middle">Concelho</th>
+	        	<th class="align-middle">Tipo</th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+    	foreach ($opunits_list as $opunits_item) {
+	    ?>
+		    <tr>
+		    	<td>
+		    		<a class="text-dark text-decoration-none text-nowrap" data-bs-toggle="offcanvas" data-bs-target="#opu<?php echo $opunits_item[0]; ?>" aria-controls="offcanvasBottom" href="">
+		    			<?php if($opunits_item[13] == 1) { ?>
+		    			<i class="fas fa-circle text-success"></i>
+		    			<?php } else { ?>
+		    			<i class="fas fa-circle text-secondary"></i>
+		    			<?php } ?>
+		    			<span class="fw-bold ms-1"><?php echo $opunits_item[2]; ?></span>
+		    		</a>
+		    	</td>
+		    	<td><?php echo $opunits_item[5]; ?></td>
+		    	<td><?php echo $opunits_item[8]; ?></td>
+		    	<td><?php echo $opunits_item[10]; ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

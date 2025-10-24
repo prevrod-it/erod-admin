@@ -1,0 +1,61 @@
+<?php
+//Form filters
+if (isset($_POST['entity'])) {
+    $entityflt = $_POST['entity'];
+} else {
+    $entityflt = "";
+}
+if (isset($_POST['group'])) {
+    $groupflt = $_POST['group'];
+} else {
+    $groupflt = "0";
+}
+if (isset($_POST['nut'])) {
+    $nutflt = $_POST['nut'];
+} else {
+    $nutflt = "0";
+}
+if (isset($_POST['zone'])) {
+    $zoneflt = $_POST['zone'];
+} else {
+    $zoneflt = "0";
+}
+if (isset($_POST['segment'])) {
+    $segmentflt = $_POST['segment'];
+} else {
+    $segmentflt = "0";
+}
+if (isset($_POST['etype'])) {
+    $etypeflt = $_POST['etype'];
+} else {
+    $etypeflt = "-1";
+}
+//Pagination
+if (isset($_POST['offset'])) {
+    $offset = $_POST['offset'];
+} else {
+    $offset = "0";
+}
+if (isset($_POST['limit'])) {
+    $limit = $_POST['limit'];
+} else {
+    $limit = "50";
+}
+//Sorting
+if (isset($_POST['sortfld'])) {
+    $sortfld = $_POST['sortfld'];
+} else {
+    $sortfld = "1";
+}
+
+$listfilter = array("entityflt" => $entityflt,"groupflt" => $groupflt,"nutflt" => $nutflt,"zoneflt" => $zoneflt,"segmentflt" => $segmentflt,"etypeflt" => $etypeflt);
+
+if ($id == "0") {
+    //Filters
+    include $core_elements->tree_struct()->templatedir->adminblock . "/entitiesfilter.phtml";
+    //Entities list
+    include $core_elements->tree_struct()->templatedir->adminblock . "/entitieslist.phtml";
+} else {
+    //Info
+    include $core_elements->tree_struct()->templatedir->adminblock . "/entityinfo.phtml";   
+}

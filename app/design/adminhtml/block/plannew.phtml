@@ -1,0 +1,102 @@
+<?php
+$formcssid = "cfgplan-insert-form";
+?>
+<div class="container-fluid mb-3">
+	<div class="card">
+		<!--div class="card-header text-white bg-success">
+			<?php echo "Nova licença"; ?>
+		</div-->
+		<div class="card-body">
+			
+			<form id="<?php echo $formcssid; ?>" action="adminplans.php" class="needs-validation refresh-on-success" novalidate>
+	            <input type="hidden" name="itemid" id="itemid" value="0">
+                <input type="hidden" name="userid" id="userid" value="<?php echo $user; ?>">
+                <input type="hidden" name="formaction" id="formaction" value="insert">
+
+                <input type="hidden" name="entity" id="entity" value="<?php echo $id; ?>">
+	                          
+	            <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="plantype">Licença</label>
+                            <select class="form-control" name="plantype" id="plantype">
+                                <?php
+                                foreach ($ptype_list as $ptype_item) {
+                                ?>
+                                <option value="<?php echo $ptype_item[0]; ?>">
+                                    <?php echo $ptype_item[1]; ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                            <div id="plantype_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-1 mb-2">
+                        <div class="form-group">
+                            <label for="nusers">Nº utilz.</label>  
+                            <input type="number" class="form-control" id="nusers" name="nusers" value="0">
+                            <div id="nusers_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="service">Serviço</label>
+                            <select class="form-control" name="service" id="service">
+                                <option class="bg-light" value="0" selected>Sem serviço</option>
+                                <option class="bg-light" value="1">Com serviço de acomp.</option>
+                            </select>
+                            <div id="service_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="pstart">Válido de:</label>   
+                            <input type="text" class="form-control" id="pstart" name="pstart" placeholder="dd/mm/aaaa" value="<?php echo date("d/m/Y"); ?>">
+                            <div id="pstart_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="pend">Válido até:</label>   
+                            <input type="text" class="form-control" id="pend" name="pend" placeholder="dd/mm/aaaa" value="">
+                            <div id="pend_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="paystatus">Pagamento</label>
+                            <select class="form-control" name="paystatus" id="paystatus">
+                                <option class="bg-light" value="0" selected>Por regularizar</option>
+                                <option class="bg-light" value="1">Regularizado</option>
+                            </select>
+                            <div id="paystatus_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1" selected>Ativa</option>
+                                <option class="bg-light" value="0">Suspensa</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-9"><!-- Empty --></div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-check"></i></button>
+                    </div>
+  				</div>
+
+    			<div class="row">
+    				<div class="col-md-12">
+    					<div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+    				</div>
+    			</div>
+	        </form>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,42 @@
+<?php
+//$plans_list form parent page
+?>
+<div class="table-responsive">
+	<table class="table table-condensed">
+	    <thead>
+	     	<tr>
+	        	<th class="align-middle text-start">
+	        		<span>Licença</span>
+	        	</th>
+	        	<th></th>
+	        	<th class="align-middle">Utiliz.</th>
+	        	<th class="align-middle">Início</th>
+	        	<th class="align-middle">Fim</th>
+	        	<th class="align-middle">Pagamento</th>
+	        	<th></th>
+	      	</tr>
+	    </thead>
+	    <tbody>
+	    <?php
+    	foreach ($plans_list as $plans_item) {
+	    ?>
+		    <tr>
+		    	<td>
+	    			<?php if($plans_item[8] == 1) { ?>
+	    			<i class="fas fa-check-circle text-success"></i>
+	    			<?php } else { ?>
+	    			<i class="fas fa-times-circle text-danger"></i>
+	    			<?php } ?>
+	    			<span class="fw-bold ms-1"><?php echo $plans_item[2]; ?></span>
+		    	</td>
+		    	<td><?php if ($plans_item[4]) { ?><i class="fas fa-wrench text-primary"></i><?php } ?></td>
+		    	<td><?php echo $plans_item[3]; ?></td>
+		    	<td><?php echo $plans_item[5]; ?></td>
+		    	<td><?php echo $plans_item[6]; ?></td>
+		    	<td><?php echo $paystates[$plans_item[7]]; ?></td>
+		    	<td><?php if ($plans_item[9] === true) { ?><i class="fas fa-link text-dark"></i><?php } else { ?><i class="fas fa-unlink text-secondary"></i><?php } ?></td>
+		    </tr>
+		<?php } ?>
+	    </tbody>
+	</table>
+</div>

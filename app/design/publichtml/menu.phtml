@@ -1,0 +1,34 @@
+<?php
+if ($currpg == "config") {
+    $configpgs = true;
+} else {
+    $configpgs = false;
+}
+?>
+<nav class="navbar navbar-expand-md bg-light navbar-light sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/index.php?role=public&pg=home">
+            <img src="<?php echo $core_elements->tree_struct()->mediadir->adminimg; ?>/top_navbar_logo.png" class="img-fluid" alt="E-ROD">
+        </a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end me-3" id="mainNavbar">
+            <!-- Links -->
+            <ul class="navbar-nav nav-underline">
+                <li class="nav-item">
+                    <a class="nav-link<?php echo ($currpg == "company") ? " active" : ""; ?>" href="/index.php?role=public&pg=company">Empresa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link<?php echo ($currpg == "publicusers") ? " active" : ""; ?>" href="/index.php?role=public&pg=publicusers">Utilizadores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link<?php echo ($configpgs) ? " active" : ""; ?>" href="/index.php?role=public&pg=config"><i class="fa fa-cog px-2 pt-1"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

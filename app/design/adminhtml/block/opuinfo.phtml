@@ -1,0 +1,137 @@
+<?php
+$formcssid = "opunit-insert-form-" . $opunits_item[0];
+$opu_nut = $opunits_item[6];
+$opu_zone = $opunits_item[7];
+?>
+<div class="container-fluid mb-3">
+	<div class="card">
+		<!--div class="card-header text-white bg-success">
+			<?php echo $opunits_item[2]; ?>
+		</div-->
+		<div class="card-body">
+			
+			<form id="<?php echo $formcssid; ?>" action="adminopunit.php" class="needs-validation refresh-on-success" callbackurl="/admin/entities/<?php echo $id; ?>" novalidate>
+	        <fieldset>
+	            <input type="hidden" name="itemid" id="itemid" value="<?php echo $opunits_item[0]; ?>">
+	            <input type="hidden" name="userid" id="userid" value="<?php echo $user; ?>">
+	            <input type="hidden" name="formaction" id="formaction" value="update">
+	            
+	            <input type="hidden" name="entityid" id="entityid" value="<?php echo $opunits_item[1]; ?>">
+	            
+	            <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="opuname">Unidade operacional</label>    
+                            <input type="text" class="form-control" id="opuname" name="opuname" placeholder="Designação da unidade operacional" value="<?php echo $opunits_item[2]; ?>">
+                            <div id="opuname_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-2"><!-- empty --></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="address">Morada</label> 
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Morada" value="<?php echo $opunits_item[3]; ?>">
+                            <div id="address_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="zipcode">Código postal</label>  
+                            <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="xxxx-yyy" value="<?php echo $opunits_item[4]; ?>">
+                            <div id="zipcode_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="ziploc">Localidade</label>  
+                            <input type="text" class="form-control" id="ziploc" name="ziploc" placeholder="Localidade" value="<?php echo $opunits_item[5]; ?>">
+                            <div id="ziploc_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="opunut">Região</label>
+                            <select class="form-control childflt" name="opunut" id="opunut" data-child="opuzone">
+                                <option value="1"<?php echo ($opu_nut == "1") ? " selected" : "" ?>>Não definida</option>
+                                <?php
+                                foreach ($nut_list as $nut_item) {
+                                ?>
+                                    <option value="<?php echo $nut_item[0]; ?>"<?php echo ($nut_item[0] == $opu_nut) ? " selected" : "" ?>>
+                                        <?php echo $nut_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="opunut_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="opuzone">Concelho ou país</label>
+                            <select class="form-control parentflt" name="opuzone" id="opuzone" data-parent="opunut">
+                                <option value="1" data-parent=""<?php echo ($opu_zone == "1") ? " selected" : "" ?>>Não definido</option>
+                                <?php
+                                foreach ($zone_list as $zone_item) {
+                                ?>
+                                    <option value="<?php echo $zone_item[0]; ?>" data-parent="<?php echo $zone_item[2]; ?>"<?php echo ($zone_item[0] == $opu_zone) ? " selected" : "" ?>>
+                                        <?php echo $zone_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="opuzone_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="oputype">Tipo de unidade</label>
+                            <select class="form-control" name="oputype" id="oputype">
+                                <?php
+                                foreach ($oputype_list as $oputype_item) {
+                                ?>
+                                    <option value="<?php echo $oputype_item[0]; ?>"<?php echo ($oputype_item[0] == $opunits_item[9]) ? " selected" : ""; ?>>
+                                        <?php echo $oputype_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="oputype_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-5 mb-2"><!-- empty --></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1"<?php echo ($opunits_item[13] == 1) ? " selected" : ""; ?>>Ativa</option>
+                                <option class="bg-light" value="0"<?php echo ($opunits_item[13] == 0) ? " selected" : ""; ?>>Suspensa</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>  
+                    </div>       
+    				<div class="col-md-8 mb-2"><!-- empty --></div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-danger w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-delete"><i class="far fa-trash-alt"></i></button>
+                    </div>
+    			</div>
+    			
+                <div class="row">
+    				<div class="col-md-12">
+    					<div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+    				</div>
+    			</div>
+	        </fieldset>
+	        </form>
+
+		</div>
+	</div>
+</div>

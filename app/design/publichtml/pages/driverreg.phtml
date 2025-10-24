@@ -1,0 +1,20 @@
+<?php
+$driver_info = $user_info;
+$driver_name = $driver_info[4];
+// Abvr driver name
+$driver_name_arr = explode(" ",$driver_name);
+$driver_name_arr_dim = count($driver_name_arr);
+$driver_abvr_name_arr = array($driver_name_arr[0],$driver_name_arr[$driver_name_arr_dim-1]); 
+$driver_abvr_name = implode(" ",$driver_abvr_name_arr);
+// End abvr driver name
+$driver_addr = $driver_info[5];
+$driver_zip = $driver_info[6];
+$driver_loc= $driver_info[7];
+$driver_taxid = $driver_info[10];
+$driver_lic = $driver_info[11];
+$driver_sst = $driver_info[15];
+?>
+<!-- Page Content -->
+<?php include $core_elements->tree_struct()->templatedir->publicblock . "/driverinfo.phtml"; ?>
+<?php include $core_elements->tree_struct()->templatedir->publicblock . "/driverjourney.phtml"; ?>
+<?php include $core_elements->tree_struct()->templatedir->publicblock . "/driveractivities.phtml"; ?>

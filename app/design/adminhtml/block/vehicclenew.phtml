@@ -1,0 +1,74 @@
+<?php
+$formcssid = "vehicle-insert-form";
+?>
+<div class="container-fluid mb-3">
+	<div class="card">
+		<!--div class="card-header text-white bg-success">
+			<?php echo "Nova viatura"; ?>
+		</div-->
+		<div class="card-body">
+			
+			<form id="<?php echo $formcssid; ?>" action="adminvehicles.php" class="needs-validation refresh-on-success" novalidate>
+	            <input type="hidden" name="itemid" id="itemid" value="0">
+                <input type="hidden" name="userid" id="userid" value="<?php echo $user; ?>">
+                <input type="hidden" name="formaction" id="formaction" value="insert">
+
+                <input type="hidden" name="entity" id="entity" value="<?php echo $id; ?>">
+	                          
+	            <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="regnum">Matrícula</label>    
+                            <input type="text" class="form-control" id="regnum" name="regnum" placeholder="Matrícula da viatura" value="">
+                            <div id="regnum_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="vehbrand">Marca</label>
+                            <select class="form-control" name="vehbrand" id="vehbrand">
+                                <option value="0" selected>Sem marca</option>
+                                <?php
+                                foreach ($vehbrands_list as $vehbrands_item) {
+                                ?>
+                                <option value="<?php echo $vehbrands_item[0]; ?>">
+                                    <?php echo $vehbrands_item[1]; ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                            <div id="vehbrand_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="model">Modelo (opcional)</label>    
+                            <input type="text" class="form-control" id="vehmodel" name="vehmodel" placeholder="Modelo da viatura" value="">
+                            <div id="vehmodel_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1" selected>Ativa</option>
+                                <option class="bg-light" value="0">Suspensa</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3"><!-- Empty --></div>
+                    <div class="col-md-1 mb-2">
+                        <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-check"></i></button>
+                    </div>
+  				</div>
+
+    			<div class="row">
+    				<div class="col-md-12">
+    					<div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+    				</div>
+    			</div>
+	        </form>
+
+		</div>
+	</div>
+</div>

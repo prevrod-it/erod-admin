@@ -1,0 +1,114 @@
+<?php
+$tot_inlist = $admin_lists->entities_list_count($groupid,$listfilter);
+$entities_list = $admin_lists->entities_list($groupid,$listfilter,$offset,$limit,$sortfld);
+$modalvis = "";
+$formcssid = "entity-insert-form";
+$seg_arr = array("0");
+
+//Pagination
+$formref = "entities";
+$tot_pgs = ceil($tot_inlist/$limit);
+$tot_cpgs = intdiv($tot_inlist,$limit);
+if ($tot_pgs > 0) {
+	$max_offset = ($tot_pgs-1)*$limit;
+} else {
+	$max_offset = 0;
+} 
+$cur_pg = ($offset/$limit)+1;
+if ($cur_pg == 1) {
+	$pg1 = $cur_pg; $of1 = $offset; 
+	$pg2 = $cur_pg+1; $of2 = $offset+$limit;
+	$pg3 = $cur_pg+2; $of3 = $offset+(2*$limit);
+} elseif (($cur_pg > 1 && $cur_pg < $tot_pgs) || $tot_pgs == 2) {
+	$pg1 = $cur_pg-1; $of1 = $offset-$limit;
+	$pg2 = $cur_pg; $of2 = $offset;
+	$pg3 = $cur_pg+1; $of3 = $offset+$limit;
+} else {
+	$pg1 = $cur_pg-2; $of1 = $offset-(2*$limit);
+	$pg2 = $cur_pg-1; $of2 = $offset-$limit;
+	$pg3 = $cur_pg; $of3 = $offset;
+} 
+$ofi = 0; $ofl = $max_offset;
+?>
+<div class="container-fluid">
+	<div class="card">
+		<div class="card-header text-white bg-success">
+			Entidades
+		</div>
+		<div class="card-body">
+			
+			<!-- Pagination -->
+			<?php include $core_elements->tree_struct()->templatedir->adminblock . "/paginationtop.phtml"; ?>
+					
+			<div class="table-responsive">
+				<table class="table table-hover table-condensed">
+				    <thead>
+				     	<tr>
+				        	<th class="align-middle text-center">
+				        		<a class="btn text-success p-0" data-bs-toggle="offcanvas" data-bs-target="#entityNew" aria-controls="offcanvasBottom"><i class="fas fa-plus-circle fa-2x"></i></a>
+				        		<!-- href="/admin/entities/new" -->
+				        		<span>Ref.</span>
+				        	</th>
+				        	<th class="align-middle">
+				        		Entidade
+				        		<!-- Sort field 1 -->
+				        		<?php if (abs($sortfld) == 1) { ?>
+				        		<button type="button" class="btn btn-link text-dark" form="entities" data-sortfld="<?php echo ($sortfld > 0) ? "-1" : "1"; ?>">
+				        			<i class="fas fa-arrow-circle-<?php echo ($sortfld > 0) ? "up" : "down"; ?>"></i>
+				        		</button>
+				        		<?php } else { ?>
+				        		<button type="button" class="btn btn-link text-dark" form="entities" data-sortfld="1">
+				        			<i class="far fa-circle"></i>
+				        		</button>
+				        		<?php } ?>
+				        	</th>
+				        	<th class="align-middle">Concelho / País</th>
+				        	<th class="align-middle">Segmento</th>
+				        	<th class="align-middle">Tipo de entidade</th>
+				      	</tr>
+				    </thead>
+				    <tbody>
+				    <?php
+				    	foreach ($entities_list as $entities_item) {
+				    ?>
+					    <tr>
+					    	<td><a class="btn btn-<?php echo ($entities_item[6] == "1") ? "success" : "secondary"; ?> text-light text-nowrap" href="/admin/entities/<?php echo $entities_item[0]; ?>"><?php echo $entities_item[1]; ?></a></td>
+					    	<td><a class="text-dark text-decoration-none font-weight-bold" href="/admin/entities/<?php echo $entities_item[0]; ?>"><?php echo $entities_item[2]; ?></a></td>
+					    	<td><?php echo $entities_item[3]; ?></td>
+					    	<td><?php echo $entities_item[4]; ?></td>
+					    	<td><?php echo $entities_item[5]; ?></td>
+					    </tr>
+					<?php } ?>
+				    </tbody>
+				</table>
+			</div>
+			
+			<!-- Pagination -->
+			<?php include $core_elements->tree_struct()->templatedir->adminblock . "/paginationbottom.phtml"; ?>	
+		</div>
+	</div>
+</div>
+
+<!-- New item -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="entityNew" aria-labelledby="Nova entidade">
+  	<div class="offcanvas-header pb-1">
+    	<h5 class="offcanvas-title" id="offcanvasBottomLabel">Nova entidade</h5>
+    	<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+  	</div>
+  	<div class="offcanvas-body">
+  		<?php include $core_elements->tree_struct()->templatedir->adminblock . "/entitynew.phtml"; ?>
+  	</div>
+</div>
+
+<!-- Segment Modal -->
+<?php
+$modalid = "segModal";
+$modaltit = "Segmentos";
+$editstatus = $modalvis;
+$cbxsetid = $formcssid . "-seg";
+$trgfield = "segment";
+$modal_list = $segment_list ;
+$cbxc_arr = $seg_arr;
+$curr_modal_list = array();
+include $core_elements->tree_struct()->templatedir->adminblock . "/cbxmodal.phtml";
+?>

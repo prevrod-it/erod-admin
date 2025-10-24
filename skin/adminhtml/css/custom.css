@@ -1,0 +1,96 @@
+/*!
+* Start Bootstrap - Modern Business (https://startbootstrap.com/template-overviews/modern-business)
+* Copyright 2013-2019 Start Bootstrap
+* Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-logomodern-business-nav/blob/master/LICENSE)
+*/
+html {
+  background-color: #00b8e0;
+  scroll-behavior: smooth;
+}
+
+.hc_scrollup {
+  background-color: #28a745;
+  border-radius: 0px;
+  bottom: 0px;
+  padding: 7px;
+  display: none;
+  height: 40px;
+  opacity: 1;
+  position: fixed;
+  right: 20px;
+  text-align: center;
+  width: 70px;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.hc_scrollup i {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+nav.navbar,.sticky-top {
+  padding-top: 0.25rem;
+  padding-bottom: 0px;
+}
+a.navbar-brand {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.navbar-light .navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.dropdown-item {
+  font-size: 0.95rem;
+}
+@media (max-width: 767px) {
+  .nav-underline {
+    gap: var(--bs-nav-underline-gap) / 3;
+  }
+}
+@media (min-width: 768px) and (max-width: 979px) {
+  .navbar-expand-md {
+    flex-wrap: wrap;
+  }
+  a.navbar-brand .img-fluid {
+    max-width: 85%;
+  }
+  .navbar-light .navbar-nav .nav-link {
+    font-size: 0.9rem;
+  }
+  .dropdown-item {
+    font-size: 0.85rem;
+  }
+}
+@media (min-width: 768px) {
+  .navbar-expand-md .navbar-nav .nav-link {
+    padding-right: var(--bs-navbar-nav-link-padding-x) / 1.2 ;
+    padding-left: var(--bs-navbar-nav-link-padding-x) / 1.2;
+  }
+}
+.nav-link {
+  padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x) 0.1rem var(--bs-nav-link-padding-x);
+}
+
+.custom-file-input {
+    content: "Escolher";
+}
+
+.card-lnk {
+  text-decoration: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn.btn-custom {
+  color: #fff;
+  background-color: #00b8e0;
+  border-color: #00b8e0;
+}
+
+.bg-custom {
+  background-color: #00b8e0 !important;
+}

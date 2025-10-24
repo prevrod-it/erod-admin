@@ -1,0 +1,47 @@
+<div class="row">
+	<div class="col-md-3">
+		<div class="input-group mb-3">
+            <div class="input-group-text"><i class="fas fa-info"></i></div>
+			<input type="text" class="form-control" value="<?php echo $tot_inlist; ?> registo<?php echo ($tot_inlist > 1) ? "s" : ""; ?>, em <?php echo $tot_pgs; ?> pág." disabled>
+		</div>
+	</div>
+	<div class="col-md-7">
+		<nav aria-label="Page navigation">
+		  	<ul class="pagination" form="<?php echo $formref; ?>">
+		    	<li class="page-item" data-offset="<?php echo $ofi; ?>">
+		      		<a class="page-link" href="#" aria-label="Início">
+		        		<span aria-hidden="true">&laquo;</span>
+		        		<span class="sr-only">Previous</span>
+		      		</a>
+		    	</li>
+		    	<li class="page-item<?php echo ($cur_pg == $pg1) ? " active" : ""; ?>" data-offset="<?php echo $of1; ?>"><a class="page-link" href="#"><?php echo $pg1; ?></a></li>
+		    	<?php if ($tot_pgs > 1) { ?> 	
+		    		<li class="page-item<?php echo ($cur_pg == $pg2) ? " active" : ""; ?>" data-offset="<?php echo $of2; ?>"><a class="page-link" href="#"><?php echo $pg2; ?></a></li>
+		    	<?php } ?>
+		    	<?php if ($tot_pgs > 2) { ?>
+		    		<li class="page-item<?php echo ($cur_pg == $pg3) ? " active" : ""; ?>" data-offset="<?php echo $of3; ?>"><a class="page-link" href="#"><?php echo $pg3; ?></a></li>
+		    	<?php } ?>
+		    	<li class="page-item" data-offset="<?php echo $ofl; ?>">
+		      		<a class="page-link" href="#" aria-label="Fim">
+		        		<span aria-hidden="true">&raquo;</span>
+		        		<span class="sr-only">Next</span>
+		      		</a>
+		    	</li>
+		  	</ul>
+		</nav>
+	</div>
+	<div class="col-md-2">
+		<div class="input-group mb-3">
+            <div class="input-group-text"><i class="fas fa-list"></i></div>
+            <select class="form-control list-filter" name="limit" form="<?php echo $formref; ?>">
+                <option value="10"<?php echo ($limit == "10") ? " selected" : "" ?>>10 reg. por pág.</option>
+                <option value="25"<?php echo ($limit == "25") ? " selected" : "" ?>>25 reg. por pág.</option>
+                <option value="50"<?php echo ($limit == "50") ? " selected" : "" ?>>50 reg. por pág.</option>
+                <option value="100"<?php echo ($limit == "100") ? " selected" : "" ?>>100 reg. por pág.</option>
+                <option value="250"<?php echo ($limit == "250") ? " selected" : "" ?>>250 reg. por pág.</option>
+                <!--option value="500"<?php echo ($limit == "500") ? " selected" : "" ?>>500 reg. por pág.</option-->
+                <!--option value="1000"<?php echo ($limit == "1000") ? " selected" : "" ?>>1000 reg. por pág.</option-->
+            </select>
+        </div>
+	</div>
+</div>

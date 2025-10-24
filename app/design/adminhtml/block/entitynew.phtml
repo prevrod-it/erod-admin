@@ -1,0 +1,189 @@
+<?php
+$status_desc = array("Suspensa","Ativa");
+$segment_list = $admin_lists->segment_list($groupid);
+$nut_list = $admin_lists->nut_list();
+$zone_list = $admin_lists->zone_list(0);
+$etype_list = $admin_lists->etype_list();
+$contscope_list = $admin_lists->contscope_list();
+?>
+<div class="container-fluid mb-3">
+	<div class="card">
+		<!--div class="card-header text-white bg-success">
+			Nova entidade
+		</div-->
+		<div class="card-body">
+			
+			<form id="<?php echo $formcssid; ?>" action="adminentity.php" class="needs-validation refresh-on-success" novalidate>
+	        <fieldset>
+	            <input type="hidden" name="itemid" id="itemid" value="0">
+	            <input type="hidden" name="userid" id="userid" value="<?php echo $user; ?>">
+	            <input type="hidden" name="formaction" id="formaction" value="insert">
+	            
+	            <input type="hidden" name="segment" id="segment" value="[0]">
+	            
+	            <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="entityname">Entidade</label>    
+                            <input type="text" class="form-control" id="entityname" name="entityname" placeholder="Entidade" value="">
+                            <div id="entityname_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="taxid">NIF</label>  
+                            <input type="text" class="form-control" id="taxid" name="taxid" placeholder="NIF" value="">
+                            <div id="taxid_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2"><!-- empty --></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="address">Morada</label> 
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Morada" value="">
+                            <div id="address_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="zipcode">Código postal</label>  
+                            <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="xxxx-yyy" value="">
+                            <div id="zipcode_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="ziploc">Localidade</label>  
+                            <input type="text" class="form-control" id="ziploc" name="ziploc" placeholder="Localidade" value="">
+                            <div id="ziploc_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="form-group">
+                            <label for="email">e-mail</label>  
+                            <input type="text" class="form-control" id="email" name="email" placeholder="x@yyy.com" value="">
+                            <div id="email_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="tel">Telefone</label>  
+                            <input type="text" class="form-control" id="tel" name="tel" placeholder="Telefone" value="">
+                            <div id="tel_warn" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2"><!-- empty --></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="entitynut">Região</label>
+                            <select class="form-control childflt" name="entitynut" id="entitynut" data-child="entityzone">
+                                <option value="1" selected>Não definida</option>
+                                <?php
+                                foreach ($nut_list as $nut_item) {
+                                ?>
+                                    <option value="<?php echo $nut_item[0]; ?>">
+                                        <?php echo $nut_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="entitynut_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label for="entityzone">Concelho ou país</label>
+                            <select class="form-control parentflt" name="entityzone" id="entityzone" data-parent="entitynut">
+                                <option value="1" data-parent="" selected>Não definido</option>
+                                <?php
+                                foreach ($zone_list as $zone_item) {
+                                ?>
+                                    <option value="<?php echo $zone_item[0]; ?>" data-parent="<?php echo $zone_item[2]; ?>">
+                                        <?php echo $zone_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="entityzone_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="entitytype">Tipo de entidade</label>
+                            <select class="form-control" name="entitytype" id="entitytype">
+                                <option value="0" selected>Em avaliação</option>
+                                <?php
+                                foreach ($etype_list as $etype_item) {
+                                ?>
+                                    <option value="<?php echo $etype_item[0]; ?>">
+                                        <?php echo $etype_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="entitytype_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="contscope">Âmbito do contrato de trabalho</label>
+                            <select class="form-control" name="contscope" id="contscope">
+                                <?php
+                                foreach ($contscope_list as $contscope_item) {
+                                ?>
+                                    <option value="<?php echo $contscope_item[0]; ?>">
+                                        <?php echo $contscope_item[1]; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                            <div id="contscope_warn" class="invalid-feedback"></div>
+                         </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <div class="form-group">
+                            <label>Segmento (principal)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="mainsegment" value="Não definido" disabled>
+                                <div class="input-group-text">
+                                    <a class="text-dark" data-bs-toggle="modal" data-bs-target="#segModal"><i class="far fa-list-alt"></i></a>
+                                </div>
+                                <div id="mainsegment_warn" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <div class="form-group">
+                            <label for="status">Estado funcional</label>
+                            <select class="form-control bg-warning" name="status" id="status">
+                                <option class="bg-light" value="1" selected>Ativa</option>
+                                <option class="bg-light" value="0">Suspensa</option>
+                            </select>
+                            <div id="status_warn" class="invalid-feedback"></div>
+                        </div>  
+                    </div>       
+    				<div class="col-md-9 mb-2"><!-- empty --></div>
+    				<div class="col-md-1 mb-2">
+    					<button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-check"></i></button>
+    				</div>
+    			</div>
+    			
+                <div class="row">
+    				<div class="col-md-12">
+    					<div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+    				</div>
+    			</div>
+	        </fieldset>
+	        </form>
+
+		</div>
+	</div>
+</div>

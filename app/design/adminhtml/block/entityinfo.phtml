@@ -1,0 +1,562 @@
+<?php
+$entity_data = $admin_data->get_entity_data($id);
+$modalvis = "";
+$entity_nut = $entity_data[10];
+$entity_zone = $entity_data[11];
+$date_create = date("d/m/Y H:i:s",strtotime($entity_data[14]));
+$last_update = date("d/m/Y H:i:s",strtotime($entity_data[15]));
+$seg_arr = explode("|",$entity_data[2]); $seg_arr_json = str_replace("\"","",json_encode($seg_arr));
+$plnadesc = $admin_data->get_eplan_desc($entity_data[1]);
+$plnaserv = $admin_data->get_eplan_sl($entity_data[1]);
+$nactiveusers = $admin_data->get_eusers_active($entity_data[0]);
+$main_seg = $admin_data->get_segment_data($seg_arr[0]);
+$curr_seg_array = $admin_data->get_segment_array($seg_arr);
+$status_desc = array("Suspensa","Ativa");
+if (!is_null($entity_data[16])) {
+    $status = $entity_data[16];
+} else {
+    $status = 0;
+}
+$planssel_list = $admin_lists->entityplans_list($id,1);
+$segment_list = $admin_lists->segment_list();
+$nut_list = $admin_lists->nut_list();
+$zone_list = $admin_lists->zone_list(0);
+$etype_list = $admin_lists->etype_list();
+$contscope_list = $admin_lists->contscope_list();
+$formcssid = "entity-update-form";
+//Vehicles info
+$vehicles_list = $admin_lists->entityvehcs_list($id,-1);
+$vehbrands_list = $admin_lists->vehiclebrands_list();
+$ptype_list = $admin_lists->plantype_list();
+//OP Units info
+$opunits_list = $admin_lists->entityopus_list($id,-1); 
+$oputype_list = $admin_lists->oputype_list();
+//Pkans info
+$plans_list = $admin_lists->entityplans_list($id,0);
+$paystates = array("Por regularizar","Regularizado");
+?>
+<div id="infoBoard" class="carousel slide carousel-fade" data-bs-touch="false" data-bs-interval="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="container-fluid mb-3">
+                <div class="card">
+                    <div class="card-header text-white bg-success">
+                        <?php echo "$entity_data[3] ($entity_data[0])"; ?><a class="btn text-white px-1 py-0 ms-3" data-bs-target="#infoBoard" data-bs-slide="next"><i class="far fa-edit"></i></a>
+                    </div>
+                    <div class="card-body pb-1">
+                        <div class="row pt-0">
+                            <div class="col-md-2 pt-3 mb-1 bg-light border-top border-4 border-success">
+                                <label class="fw-bold">Entidade:</label>    
+                                <span class="d-block lh-1 pb-2"><h5 class="text-success"><?php echo $entity_data[3]; ?></h5></span>
+                                <label class="fw-bold">NIF:</label>  
+                                <span class="d-block lh-1 pb-2"><h5 class="text-success"><?php echo $entity_data[4]; ?></h5></span>
+                            </div>
+                            <div class="col-md-2 pt-3 mb-1 border-top border-4 border-success">
+                                <label class="fw-bold">Morada:</label>  
+                                <span class="d-block lh-1 pb-2"><?php echo $entity_data[5]; ?></span>
+                                <label class="fw-bold">CP / Localidade:</label>  
+                                <span class="d-block lh-1 pb-2">
+                                <?php 
+                                echo (strlen($entity_data[6]) > 0) ? $entity_data[6] : "";
+                                echo (strlen($entity_data[6]) > 0 && strlen($entity_data[7]) > 0) ? " " : "";
+                                echo (strlen($entity_data[7]) > 0) ? $entity_data[7] : "";
+                                ?>        
+                                </span>
+                                <label class="fw-bold">Concelho / País / Região:</label>    
+                                <span class="d-block lh-1 pb-2">
+                                <?php
+                                foreach ($zone_list as $zone_item) {
+                                    if ($entity_zone > 1 && $zone_item[0] == $entity_zone) {
+                                        echo $zone_item[1];
+                                    }
+                                }
+                                echo ($entity_zone > 1 && $entity_nut > 1) ? ", " : "";
+                                foreach ($nut_list as $nut_item) {
+                                    if ($entity_nut > 1 && $nut_item[0] == $entity_nut) {
+                                        echo $nut_item[1];
+                                    }
+                                }
+                                ?>       
+                                </span>    
+                            </div>
+                            <div class="col-md-2 pt-3 mb-1 bg-light border-top border-4 border-success">
+                                <label class="fw-bold">e-mail:</label>  
+                                <span class="d-block lh-1 pb-2"><?php echo $entity_data[8]; ?></span>
+                                <label class="fw-bold">Telefone:</label>  
+                                <span class="d-block lh-1 pb-2"><?php echo $entity_data[9]; ?></span>
+                            </div>
+                            <div class="col-md-2 pt-3 mb-1 border-top border-4 border-info">
+                                <label class="fw-bold">Tipo de entidade:</label>    
+                                <span class="d-block lh-1 pb-2">
+                                <?php
+                                if ($entity_data[12] == 0) {
+                                    echo "Em avaliação";
+                                }
+                                foreach ($etype_list as $etype_item) {
+                                    if ($etype_item[0] == $entity_data[12]) {
+                                        echo $etype_item[1];
+                                    }
+                                }
+                                ?>
+                                </span>
+                                <label class="fw-bold">Âmbito do contratos de trabalho:</label>
+                                <span class="d-block lh-1 pb-2">
+                                <?php
+                                foreach ($contscope_list as $contscope_item) {
+                                    if ($contscope_item[0] == $entity_data[13]) {
+                                        echo $contscope_item[1];
+                                    }
+                                }
+                                ?>
+                                </span>
+                                <label class="fw-bold">Segmentos:</label> 
+                                <span class="d-block lh-1 pb-2">
+                                <?php
+                                foreach ($curr_seg_array as $curr_seg_item) {
+                                    echo $curr_seg_item . "<br>";
+                                }
+                                ?>
+                                </span>
+                            </div>
+                            <div class="col-md-2 pt-3 mb-1 bg-light bg-light border-top border-4 border-warning">
+                                <label class="fw-bold">Licença:</label>  
+                                <span class="d-block lh-1 pb-2"><?php echo $plnadesc; ?></span>
+                                <label class="fw-bold">Serviço:</label>
+                                <span class="d-block lh-1 pb-2"><?php echo $plnaserv; ?></span>
+                                <label class="fw-bold">Utilizadores ativos:</label>  
+                                <span class="d-block lh-1 pb-2"><?php echo $nactiveusers; ?></span>
+                            </div>
+                            <div class="col-md-2 pt-3 mb-1 border-top border-4 border-warning">
+                                <label class="fw-bold">Data de criação:</label>    
+                                <span class="d-block lh-1 pb-2"><?php echo $date_create; ?></span>
+                                <label class="fw-bold">Última atualização:</label>    
+                                <span class="d-block lh-1 pb-2"><?php echo $last_update; ?></span>
+                                <label class="fw-bold">Estado funcional:</label>    
+                                <span class="d-block lh-1 pb-2"><?php echo $status_desc[$status]; ?></span>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="container-fluid mb-3">
+                <div class="card">
+                    <div class="card-header text-white bg-success">
+                        <?php echo "$entity_data[3] ($entity_data[0])"; ?><a class="btn text-white px-1 py-0 ms-3" data-bs-target="#infoBoard" data-bs-slide="prev"><i class="fas fa-info-circle"></i></a>
+                    </div>
+                    <div class="card-body">
+                        
+                        <form id="<?php echo $formcssid; ?>" action="adminentity.php" class="needs-validation refresh-on-success" callbackurl="/admin/entities" novalidate>
+                        <fieldset<?php echo (is_null($entity_data[0])) ? " disabled" : ""; ?>>
+                            <input type="hidden" name="itemid" id="itemid" value="<?php echo $entity_data[0]; ?>">
+                            <input type="hidden" name="userid" id="userid" value="<?php echo $user; ?>">
+                            <input type="hidden" name="formaction" id="formaction" value="update">
+                            
+                            <input type="hidden" name="segment" id="segment" value="<?php echo $seg_arr_json; ?>">
+                            
+                            <div class="row">
+                                <div class="col-md-7 mb-2">
+                                    <div class="form-group">
+                                        <label for="entityname">Entidade</label>    
+                                        <input type="text" class="form-control" id="entityname" name="entityname" placeholder="Entidade" value="<?php echo $entity_data[3]; ?>">
+                                        <div id="entityname_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="taxid">NIF</label>  
+                                        <input type="text" class="form-control" id="taxid" name="taxid" placeholder="NIF" value="<?php echo $entity_data[4]; ?>">
+                                        <div id="taxid_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label for="planid">Subscrição</label>
+                                        <select class="form-control" name="planid" id="planid">
+                                            <option value="0">Sem licença</option>
+                                            <?php
+                                            foreach ($planssel_list as $plan_item) {
+                                            ?>
+                                                <option value="<?php echo $plan_item[0]; ?>"<?php echo ($plan_item[0] == $entity_data[1]) ? " selected" : "" ?>>
+                                                    <?php echo $plan_item[2] . " - " . $plan_item[3] . "U"; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="planid_warn" class="invalid-feedback"></div>
+                                    </div>    
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-7 mb-2">
+                                    <div class="form-group">
+                                        <label for="address">Morada</label> 
+                                        <input type="text" class="form-control" id="address" name="address" placeholder="Morada" value="<?php echo $entity_data[5]; ?>">
+                                        <div id="address_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="zipcode">Código postal</label>  
+                                        <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="xxxx-yyy" value="<?php echo $entity_data[6]; ?>">
+                                        <div id="zipcode_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label for="ziploc">Localidade</label>  
+                                        <input type="text" class="form-control" id="ziploc" name="ziploc" placeholder="Localidade" value="<?php echo $entity_data[7]; ?>">
+                                        <div id="ziploc_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-7 mb-2">
+                                    <div class="form-group">
+                                        <label for="email">e-mail</label>  
+                                        <input type="text" class="form-control" id="email" name="email" placeholder="x@yyy.com" value="<?php echo $entity_data[8]; ?>">
+                                        <div id="email_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="tel">Telefone</label>  
+                                        <input type="text" class="form-control" id="tel" name="tel" placeholder="Telefone" value="<?php echo $entity_data[9]; ?>">
+                                        <div id="tel_warn" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-2"><!-- empty --></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="entitynut">Região</label>
+                                        <select class="form-control childflt" name="entitynut" id="entitynut" data-child="entityzone">
+                                            <option value="1"<?php echo ($entity_nut == "1") ? " selected" : "" ?>>Não definida</option>
+                                            <?php
+                                            foreach ($nut_list as $nut_item) {
+                                            ?>
+                                                <option value="<?php echo $nut_item[0]; ?>"<?php echo ($nut_item[0] == $entity_nut) ? " selected" : "" ?>>
+                                                    <?php echo $nut_item[1]; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="entitynut_warn" class="invalid-feedback"></div>
+                                     </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label for="entityzone">Concelho ou país</label>
+                                        <select class="form-control parentflt" name="entityzone" id="entityzone" data-parent="entitynut">
+                                            <option value="1" data-parent=""<?php echo ($entity_zone == "1") ? " selected" : "" ?>>Não definido</option>
+                                            <?php
+                                            foreach ($zone_list as $zone_item) {
+                                            ?>
+                                                <option value="<?php echo $zone_item[0]; ?>" data-parent="<?php echo $zone_item[2]; ?>"<?php echo ($zone_item[0] == $entity_zone) ? " selected" : "" ?>>
+                                                    <?php echo $zone_item[1]; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="entityzone_warn" class="invalid-feedback"></div>
+                                     </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="entitytype">Tipo de entidade</label>
+                                        <select class="form-control" name="entitytype" id="entitytype">
+                                            <?php if ($entity_data[12] == 0) { ?>
+                                            <option value="0" selected>Em avaliação</option>
+                                            <?php } ?>
+                                            <?php
+                                            foreach ($etype_list as $etype_item) {
+                                            ?>
+                                                <option value="<?php echo $etype_item[0]; ?>"<?php echo ($etype_item[0] == $entity_data[12]) ? " selected" : "" ?>>
+                                                    <?php echo $etype_item[1]; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="entitytype_warn" class="invalid-feedback"></div>
+                                     </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="contscope">Âmbito do contrato de trabalho</label>
+                                        <select class="form-control" name="contscope" id="contscope">
+                                            <?php
+                                            foreach ($contscope_list as $contscope_item) {
+                                            ?>
+                                                <option value="<?php echo $contscope_item[0]; ?>"<?php echo ($contscope_item[0] == $entity_data[13]) ? " selected" : "" ?>>
+                                                    <?php echo $contscope_item[1]; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <div id="contscope_warn" class="invalid-feedback"></div>
+                                     </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-group">
+                                        <label>Segmento (principal)</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="mainsegment" value="<?php echo $main_seg; ?>" disabled>
+                                            <div class="input-group-text">
+                                                <a class="text-dark" data-bs-toggle="modal" data-bs-target="#segModal"><i class="far fa-list-alt"></i></a>
+                                            </div>
+                                            <div id="mainsegment_warn" class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label for="status">Estado funcional</label>
+                                        <select class="form-control bg-warning" name="status" id="status">
+                                            <option class="bg-light" value="1"<?php echo ($status == "1") ? " selected" : "" ?>>Ativa</option>
+                                            <option class="bg-light" value="0"<?php echo ($status == "0") ? " selected" : "" ?>>Suspensa</option>
+                                        </select>
+                                        <div id="status_warn" class="invalid-feedback"></div>
+                                    </div>  
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                  <div class="form-group">
+                                      <label>Data de criação</label>
+                                      <input type="text" class="form-control" value="<?php echo $date_create; ?>" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <div class="form-group">
+                                        <label>Última atualização</label>
+                                        <input type="text" class="form-control" value="<?php echo $last_update; ?>" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2"><!-- empty --></div>
+                                <div class="col-md-1 mb-2">
+                                    <button type="button" class="btn btn-success w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-send"><i class="fas fa-sync-alt"></i></button>
+                                </div>
+                                <div class="col-md-1 mb-2">
+                                    <button type="button" class="btn btn-danger w-100 mt-3 pt-2 pb-2 text-nowrap" btnaction="form-delete"><i class="far fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-secondary text-secondary mt-3 d-none" id="form_status"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Segment Modal -->
+<?php
+$modalid = "segModal";
+$modaltit = "Segmentos";
+$editstatus = $modalvis;
+$cbxsetid = $formcssid . "-seg";
+$trgfield = "segment";
+$modal_list = $segment_list ;
+$cbxc_arr = $seg_arr;
+$curr_modal_list = $curr_seg_array;
+if (!is_null($entity_data[0])) { 
+    include $core_elements->tree_struct()->templatedir->adminblock . "/cbxmodal.phtml";
+}
+?>
+
+<?php if (!is_null($entity_data[0])) { ?>
+<div class="container-fluid mt-1">
+    <div class="row">
+        <div class="col-6 text-start">
+            <a class="btn" data-bs-target="#bottomBoard" data-bs-slide="prev"><i class="fas fa-chevron-left fs-2x text-success"></i><i class="fas fa-chevron-left fs-2x text-success"></i></a>
+        </div>
+        <div class="col-6 text-end">
+            <a class="btn" data-bs-target="#bottomBoard" data-bs-slide="next"><i class="fas fa-chevron-right fs-2x text-success"></i><i class="fas fa-chevron-right fs-2x text-success"></i></a>
+        </div>
+    </div>
+</div>
+<div id="bottomBoard" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <div class="card h-100">
+                            <div class="card-header text-dark bg-light">
+                                Últimas comutações / atividades
+                            </div>
+                            <div class="card-body">
+                                <?php include $core_elements->tree_struct()->templatedir->adminblock . "/entityactivities.phtml"; ?>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-7 mb-2">
+                        <div class="card h-100">
+                            <div class="card-header text-dark bg-light">
+                                Utilizadores / trabalhadores
+                            </div>
+                            <div class="card-body">
+                                <?php include $core_elements->tree_struct()->templatedir->adminblock . "/entityusers.phtml"; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <div class="card h-100">
+                            <div class="card-header text-dark bg-light">
+                                Viaturas
+                            </div>
+                            <div class="card-body">
+                                <?php include $core_elements->tree_struct()->templatedir->adminblock . "/entityvehicles.phtml"; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <div class="card h-100">
+                            <div class="card-header text-dark bg-light">
+                                Uniddes operacionais
+                            </div>
+                            <div class="card-body">
+                                <?php include $core_elements->tree_struct()->templatedir->adminblock . "/entityopunits.phtml"; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="card h-100">
+                            <div class="card-header text-dark bg-light">
+                                Subscrições
+                            </div>
+                            <div class="card-body">
+                                <?php include $core_elements->tree_struct()->templatedir->adminblock . "/entityplans.phtml"; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New user -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="pubuserNew" aria-labelledby="Novo utilizador / trabalhador">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Novo utilizador / trabalhador</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/publicusernew.phtml"; ?>
+    </div>
+</div>
+
+<!-- Segment Modal -->
+<?php
+$modalid = "newusersegModal";
+$modaltit = "Segmentos";
+$editstatus = $newusermodalvis;
+$cbxsetid = $formcssid . "-seg";
+$trgfield = "newusersegment";
+$modal_list = $entity_segment_list;
+$cbxc_arr = $no_seg_arr;
+$curr_modal_list = array();
+include $core_elements->tree_struct()->templatedir->adminblock . "/cbxmodal.phtml";
+?>
+
+<!-- New vehicle -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="evehNew" aria-labelledby="Nova viatura">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Nova viatura</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/vehicclenew.phtml"; ?>
+    </div>
+</div>
+
+<!-- Current vehicles -->
+<?php
+foreach ($vehicles_list as $vehicles_item) {
+?>
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="eveh<?php echo $vehicles_item[0]; ?>" aria-labelledby="<?php echo $vehicles_item[2]; ?>">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel"><?php echo $vehicles_item[2]; ?></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/vehicleinfo.phtml"; ?>
+    </div>
+</div>
+<?php } ?>
+
+<!-- New OP Unit -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="opuNew" aria-labelledby="Nova unidade operacional">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Nova unidade operacional</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/opunew.phtml"; ?>
+    </div>
+</div>
+
+<!-- Current OP Units -->
+<?php
+foreach ($opunits_list as $opunits_item) {
+?>
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="opu<?php echo $opunits_item[0]; ?>" aria-labelledby="<?php echo $opunits_item[2]; ?>">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel"><?php echo $opunits_item[2]; ?></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/opuinfo.phtml"; ?>
+    </div>
+</div>
+<?php } ?>
+
+<!-- New plan -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="eplanNew" aria-labelledby="Nova licença">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Nova licença</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/plannew.phtml"; ?>
+    </div>
+</div>
+
+<!-- Current plans -->
+<?php
+foreach ($plans_list as $plans_item) {
+?>
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="eplan<?php echo $plans_item[0]; ?>" aria-labelledby="<?php echo $plans_item[2]; ?>">
+    <div class="offcanvas-header pb-1">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel"><?php echo $plans_item[2]; ?></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+        <?php include $core_elements->tree_struct()->templatedir->adminblock . "/planinfo.phtml"; ?>
+    </div>
+</div>
+<?php } ?>
+<?php } ?>

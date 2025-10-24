@@ -1,0 +1,22 @@
+<div id="driverelm" class="container bg-custom px-3 py-2 mb-2">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger py-2 mb-1 text-center">
+                <i class="fas fa-exclamation-triangle pe-2"></i><span class="fw-bold">VERSÃO DEMO</span><i class="fas fa-exclamation-triangle ps-2"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-white d-flex align-items-center">
+            <i class="fas fa-user-circle fa-3x me-1"></i>
+            <!--i class="fas fa-user-circle align-self-end pb-2 me-1"></i-->
+            <!--i class="fas fa-user-circle align-self-end pb-2 me-3"></i-->
+            <span class="w-100 text-end">
+                <?php
+                echo $driver_abvr_name . "<br>NIF: " . $driver_taxid;
+                echo (strlen($driver_lic) > 0 && false) ? "<br>Lic: " . $driver_lic : "";
+                ?>
+            </span>
+        </div>
+    </div>
+</div>
