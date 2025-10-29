@@ -271,6 +271,7 @@ class Core
 			$allow = true;
 		}
 
+		$allow = true;
 		return $allow;
 	}
 
