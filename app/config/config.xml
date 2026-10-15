@@ -10,5 +10,6 @@
 		<web></web>
 		<app></app>
 	</apikeys>
+	<appdemo>true</appdemo>
 </core>
 

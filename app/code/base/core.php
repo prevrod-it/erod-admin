@@ -10,6 +10,12 @@ class Core
 	private static $instance = null;
 	public static $mysqli;
 
+	public function is_demo()
+	{
+		return isset($this->xml_obj->appdemo)
+			&& strtolower(trim((string)$this->xml_obj->appdemo)) === 'true';
+	}
+
 	public static function config_path()
 	{
 		$local = __DIR__ . '/../../config/config.local.xml';
@@ -206,6 +212,27 @@ class Core
 		$result = self::$mysqli->query("INSERT INTO publicsessions (iSESuserid, dSESstart, sSEShash, iSESexp) VALUES ('$user', NOW(), '$session', '$expiretime')");
 		
 		return $session;	
+	}
+
+	public static function has_public_session($user, $session)
+	{
+		self::init();
+		try {
+			$stmt = self::$mysqli->prepare("SELECT 1 FROM publicsessions WHERE iSESuserid = ? AND sSEShash = ? AND iSESexp > 0 AND (UNIX_TIMESTAMP(dSESstart) + iSESexp) > UNIX_TIMESTAMP() LIMIT 1");
+			if (!$stmt) {
+				return false;
+			}
+			try {
+				if (!$stmt->bind_param('is', $user, $session) || !$stmt->execute() || !$stmt->store_result()) {
+					return false;
+				}
+				return $stmt->num_rows > 0;
+			} finally {
+				$stmt->close();
+			}
+		} catch (Exception $error) {
+			return false;
+		}
 	}
 
 	public function check_public_session($user,$session)

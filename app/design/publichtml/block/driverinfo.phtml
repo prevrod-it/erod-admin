@@ -1,4 +1,5 @@
 <div id="driverelm" class="container bg-custom px-3 py-2 mb-2">
+    <?php if ($core_elements->is_demo()): ?>
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-danger py-2 mb-1 text-center">
@@ -6,6 +7,7 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
     <div class="row">
         <div class="col-md-12 text-white d-flex align-items-center">
             <i class="fas fa-user-circle fa-3x me-1"></i>

@@ -4,11 +4,19 @@ E-ROD supports the collection and administration of professional drivers' data: 
 
 This is an existing production project. This documentation was refreshed on 2026-09-29 after the local files were restored, using repository-wide file inventory and Git comparisons, targeted source inspection, and the user-supplied database column export. It does not independently verify the deployed version, live database, or runtime behavior. No application requests, database operations, or email deliveries were performed for this review.
 
-## Current version and demo/production distinction
+## Demo display setting
+
+Set `<appdemo>true</appdemo>` directly under `<core>` in the active XML configuration to display all five demo banners. Set it to `false` to omit their complete HTML blocks. Missing or unrecognized values default to hidden; `true` is matched without case sensitivity and surrounding whitespace is ignored. This demo checkout has it enabled in both the tracked template and ignored local configuration.
+
+`config.local.xml` takes precedence over `config.xml` as a whole, so change the local file when it exists. `Core::is_demo()` reads the already-loaded configuration without another file read or database query. The setting controls only the admin login, global admin header, client admin header, public home/login banner, and driver information banner; it does not select a database or change API authentication.
+
+Before deploying to production, set `<appdemo>false</appdemo>` in its local configuration. The five templates can then be shared across branches. The driver block now also omits its banner in production, correcting the historical unconditional banner present in both branches.
+
+## Historical branch baseline (2026-09-29)
 
 The inspected checkout is on `demo` at `5f87596`; local `main` is at `b6938fe`. All 168 tracked files are present. The application files match the committed demo branch except for the existing activity synchronization edit described below. Assets and bundled libraries were included in the Git comparison; this was not a fresh line-by-line audit of third-party code or binary assets. Remote branches were not fetched, so this review cannot establish whether a newer version exists upstream or on production.
 
-There is **no explicit demo/production mode flag**. Configuration contains `dbconnection` fields (`servername`, `username`, `password`, `dbname`) and, since the 2026-10-15 configuration refactor, `apikeys.web` and `apikeys.app`. The branch comparison below describes the earlier committed baseline. The two local branch commits differ in five files:
+At that baseline there was **no explicit demo/production mode flag**; the new display setting above supersedes the hardcoded banner behavior. Configuration contains `dbconnection` fields (`servername`, `username`, `password`, `dbname`) and, since the 2026-10-15 configuration refactor, `apikeys.web` and `apikeys.app`. The branch comparison below describes the earlier committed baseline. The two local branch commits differ in five files:
 
 | Files | Difference on `demo` relative to `main` |
 | --- | --- |
@@ -51,7 +59,7 @@ Only run the restore after confirming a merge is in progress; it discards staged
 
 ## Architecture
 
-The application is a custom PHP application using MySQL through MySQLi. It uses explicit PHP includes, server-rendered PHP/PHTML templates, and browser JavaScript. No framework bootstrap, Composer/npm manifest, automated test suite, schema migrations, or database dump was found in the inspected project files. Libraries and browser assets are bundled directly.
+The application is a custom PHP application using MySQL through MySQLi. It uses explicit PHP includes, server-rendered PHP/PHTML templates, and browser JavaScript. No framework bootstrap, Composer/npm manifest, schema migrations, or database dump was found in the initial inspection. A standalone authentication regression test now lives in `tests/apprequestauth_test.php`. Libraries and browser assets are bundled directly.
 
 | Module | Entry and routing | Main implementation |
 | --- | --- | --- |
@@ -120,11 +128,32 @@ These are existing action-based PHP endpoints, not a versioned REST interface. T
 
 For `compare`, `pref` is a JSON-encoded string that `PublicOperations` decodes again into positional record arrays. Synchronization may insert records, close/update existing records, resolve temporary journey/vehicle references, and mark remarks deleted before returning updated lists. **`compare` is a write operation.** Array positions, sentinel records, state values, identifier mappings, and date formats are part of the existing app contract. A complete field-by-field protocol specification still needs to be established against the mobile client.
 
-Responses commonly contain positional arrays; rejected request codes return plain text. Do not assume consistent JSON errors or HTTP status handling. Authentication endpoints check sessions, but `appusersapi.php` and `appreportapi.php` do not call the session-check function before using the supplied `userid`; this requires a dedicated authorization review.
+Responses commonly contain positional arrays; rejected request codes return plain text. Do not assume consistent JSON errors or HTTP status handling. Versioned app requests now validate user/session ownership before reaching data or report operations. Legacy requests retain the API-key-only path until the migration deadline is defined; browser handlers and record-level ownership still require a separate authorization review.
+
+### Legacy and versioned app authentication
+
+The three `app*api.php` endpoints still accept JSON request bodies, not PHP form `$_POST` fields. All requests require the configured app API key in `reqcode`.
+
+| Request | Additional authentication |
+| --- | --- |
+| `appversion` absent, empty string, or whitespace-only string | Legacy behavior is unchanged |
+| Nonempty string or numeric `appversion` on data/report requests | Positive `userid` and `appses` matching an unexpired public session |
+| Versioned `applogin` | Existing credential, company, user, and subscription checks; no prior session required |
+| Versioned `appsescheck` or `applogout` | Positive `appuser` and matching unexpired `appses`, then the existing action |
+
+`appversion` is an opt-in marker, not a minimum-version comparison. Numeric zero and the string `0` also opt in. Null, boolean, array, and object versions are rejected rather than falling back to legacy. The existing lowercase 32-character session token is returned as `appsession` at login and sent back unchanged as `appses`; no additional hashing is required.
+
+`AppRequestAuth` validates the key and request fields before the session callback can initialize the database. `Core::has_public_session()` performs one prepared, read-only lookup on `publicsessions`, binding the user ID and token and checking positive expiry plus server-side expiration. Data/report requests do not renew expiry. Versioned session-check/logout actions perform this guard before their existing queries; `appsescheck` still renews expiry and checks company/user/subscription status.
+
+A rejected versioned guard returns HTTP 401 and JSON with `authstate: false` and `autherror`. The auth endpoint also includes `appuser: 0`, `appsession: null`, and `ttl: 0`. Legacy key failures retain the existing plain-text response. Login credential failures retain the existing login response. Successful endpoint response shapes are unchanged.
+
+No deadline has been configured yet. Omitting the version still selects legacy authentication, so session enforcement is not universal until that fallback is removed. Login remains the exception when the migration ends. No new database indexes were created: index availability and production query performance require verification against a safe environment.
+
+Run `php tests/apprequestauth_test.php` for isolated authentication tests. They use synthetic inputs, callback/connection doubles, and no database or application requests. They cover legacy compatibility, malformed values, mismatched identities/tokens, session lookup results, login exemption, auth actions, parameter binding, and error responses. They do not verify a real SQL execution plan or end-to-end Android behavior.
 
 ### API key configuration
 
-**Sanitized checkpoint (2026-10-15):** tracked `config.xml` now contains empty configuration fields. Copy it to ignored `app/config/config.local.xml` and supply the environment-specific database settings and both keys there. `Core::config_path()` prefers that local file for database and API configuration, falling back to `config.xml` only when no local file exists. The local file fully replaces the tracked configuration; it is not a field-by-field overlay. Existing local values were preserved without rotation. Deployments must supply their own local file before running this version. Do not commit or overwrite that file during deployment. This does not remove secrets already present in Git history.
+**Sanitized checkpoint (2026-10-15):** tracked `config.xml` contains empty database/API-key fields and a non-secret `appdemo` display setting. Copy it to ignored `app/config/config.local.xml` and supply the environment-specific database settings and both keys there. `Core::config_path()` prefers that local file for database and API configuration, falling back to `config.xml` only when no local file exists. The local file fully replaces the tracked configuration; it is not a field-by-field overlay. Existing local values were preserved without rotation. Deployments must supply their own local file before running this version. Do not commit or overwrite that file during deployment. This does not remove secrets already present in Git history.
 
 
 `app/config/config.xml` contains an `apikeys` element alongside `dbconnection`, with separate `web` and `app` child elements. All 14 processing endpoints read the relevant value through `Core::api_key()` without initializing a database connection. Existing key values were moved unchanged; no keys were rotated and no production branch was edited.

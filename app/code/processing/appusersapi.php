@@ -1,17 +1,12 @@
 <?php
 //Authentication
 require_once __DIR__ . '/../base/core.php';
+require_once __DIR__ . '/../base/apprequestauth.php';
 $matchcode = Core::api_key('app');
 $json_form_data = file_get_contents('php://input');
 $form_data = json_decode($json_form_data, true);
 
-if (isset($form_data['reqcode'])) {
-    $reqcode = $form_data['reqcode'];
-} else {
-	$reqcode = "";
-}
-
-if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode)) {
+if (AppRequestAuth::authorize($form_data, $matchcode, 'data', array('Core', 'has_public_session'))) {
 	/*
 	Initialize app
 	*/
@@ -116,6 +111,6 @@ if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode
 	$jsonresp = json_encode($response);
 	echo $jsonresp;
 } else {
-	echo "ERROR - Unathorized Access!";
+	AppRequestAuth::deny($form_data, 'data');
 }
 ?>
