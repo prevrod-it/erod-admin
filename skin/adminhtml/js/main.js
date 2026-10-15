@@ -163,7 +163,7 @@ window.addEventListener("DOMContentLoaded", function() {
     var limit = this.dataset.limit;
     var helper = this.dataset.helper;
     var formfields =  new FormData();
-      formfields.append("reqcode", "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d");
+      formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
       formfields.append("csfinput", csfsearchstr);
       formfields.append("groupid", groupflt);
       formfields.append("limit", limit);
@@ -416,7 +416,7 @@ window.addEventListener("DOMContentLoaded", function() {
     var procscript = "checknewevents.php";
     var url = "/app/code/processing/" + procscript;
     var formfields =  new FormData();
-    formfields.append("reqcode", "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d");
+    formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
 
     var formsend = new XMLHttpRequest();
     formsend.open("POST", url, true);

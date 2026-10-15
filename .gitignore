@@ -5,4 +5,7 @@
 # =========================================
 # Custom files and folders
 # =========================================
+AGENTS.md
+vscode_erodadmin.bat
 /_DEV_TMP_/
+/app/config/config.local.xml

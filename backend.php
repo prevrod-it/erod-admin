@@ -140,6 +140,7 @@ if ($currpg == "logout") {
 <html lang="pt">
 
 <head>
+    <meta name="erod-web-api-key" content="<?php echo htmlspecialchars(Core::api_key('web'), ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Prevrod - Sistema de registo de atividade de condução.">
     <meta name="author" content="Prevrod - Consultadoria, Lda.">

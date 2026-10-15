@@ -1,0 +1,4 @@
+# Keep the current branch's configuration when the custom merge driver runs.
+# Requires: git config --local merge.ours.driver true
+# Fast-forward and one-sided changes can bypass the driver; see README.md.
+app/config/config.xml merge=ours

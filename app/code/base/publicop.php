@@ -114,7 +114,7 @@ class PublicOperations extends BaseElements
 							$actexixts = self::check_user_activity($actitem[1],$actitem[2],$actitem[6]);
 							if (!$actexixts) {
 								if ($actitem[3] == 0) {
-									$updjrnid = self::get_jorney_from_cstr($actitem[13]);
+									$updjrnid = self::get_jorney_from_cstr($actitem[8]);
 									$actitem[3] = $updjrnid;
 								}
 								self::insert_user_activity($actitem);

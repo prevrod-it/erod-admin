@@ -1,6 +1,7 @@
 <?php
 //Authentication
-$matchcode = "12348c35ae265f8b6c875de5b5e6eb8e1106e6d365ac03412be1ef78dcb0800b";
+require_once __DIR__ . '/../base/core.php';
+$matchcode = Core::api_key('app');
 $json_form_data = file_get_contents('php://input');
 $form_data = json_decode($json_form_data, true);
 
@@ -10,13 +11,13 @@ if (isset($form_data['reqcode'])) {
 	$reqcode = "";
 }
 
-if ($reqcode == $matchcode) {
+if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode)) {
 	/*
 	Initialize app
 	*/
 
 	//Resources
-	include '../base/core.php';
+	require_once __DIR__ . '/../base/core.php';
 	include '../base/base.php';
 	include '../base/publicdata.php';
 	include '../base/publiclists.php';

@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", function() {
     var procscript = curform.getAttribute("action");
     var loadinngmsg = "A processar os dados...";
     var formfields =  new FormData(curform);
-    formfields.append("reqcode", "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d");
+    formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
 
     var formsend = new XMLHttpRequest();
     var url = "/app/code/processing/" + procscript;
@@ -87,7 +87,7 @@ window.addEventListener("DOMContentLoaded", function() {
       var loadinngmsg = "A processar os dados...";
       var formfields =  new FormData(curform);
       formfields.set("formaction", "delete");
-      formfields.append("reqcode", "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d");
+      formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
 
       var formsend = new XMLHttpRequest();
       var url = "/app/code/processing/" + procscript;

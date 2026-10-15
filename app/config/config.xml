@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <core>
 	<dbconnection>
-		<servername>localhost</servername>
-		<username>prevrod_erod</username>
-		<password>Pr20150513_er#</password>
-		<dbname>prevrod_eroddemo</dbname>
+		<servername></servername>
+		<username></username>
+		<password></password>
+		<dbname></dbname>
 	</dbconnection>
+	<apikeys>
+		<web></web>
+		<app></app>
+	</apikeys>
 </core>
 

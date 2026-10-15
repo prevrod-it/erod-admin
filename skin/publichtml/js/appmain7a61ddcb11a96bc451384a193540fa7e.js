@@ -398,7 +398,7 @@ function queryapi(apiscript,userid,qaction,qid,pref) {
   reqfields.append("qaction", qaction);
   reqfields.append("qid", qid);
   reqfields.append("pref", pref);
-  reqfields.append("reqcode", "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d");
+  reqfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
 
   var reqsend = new XMLHttpRequest();
   var url = "/app/code/processing/" + apiscript;

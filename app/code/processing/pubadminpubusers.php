@@ -2,20 +2,21 @@
 //Include validation functions
 include '../base/functions/validations.php';
 //Authentication
-$matchcode = "b86027f4f0b60cf0234557b55744a9bf6ecf26f71df497e8533c721e1c85ec6d";
+require_once __DIR__ . '/../base/core.php';
+$matchcode = Core::api_key('web');
 if (isset($_POST['reqcode'])) {
     $reqcode = $_POST['reqcode'];
 } else {
 	$reqcode = "";
 }
 
-if ($reqcode == $matchcode) {
+if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode)) {
 	/*
 	Initialize app
 	*/
 
 	//Resources
-	include '../base/core.php';
+	require_once __DIR__ . '/../base/core.php';
 	include '../base/base.php';
 	include '../base/adminop.php';
 	

@@ -10,14 +10,26 @@ class Core
 	private static $instance = null;
 	public static $mysqli;
 
+	public static function config_path()
+	{
+		$local = __DIR__ . '/../../config/config.local.xml';
+		return is_file($local) ? $local : __DIR__ . '/../../config/config.xml';
+	}
+
+	public static function api_key($client)
+	{
+		if ($client !== 'web' && $client !== 'app') {
+			return '';
+		}
+		$config = @simplexml_load_file(self::config_path(), 'SimpleXMLElement', LIBXML_NONET);
+		if ($config === false || !isset($config->apikeys->$client)) {
+			return '';
+		}
+		return trim((string)$config->apikeys->$client);
+	}
+
 	private function __construct () {
-		if (file_exists('app/config/config.xml')) {
-	    	$this->xml_obj = simplexml_load_file('app/config/config.xml');
-	    } else {
-	    	if (file_exists('../../config/config.xml')) {
-		    	$this->xml_obj = simplexml_load_file('../../config/config.xml');
-		    }	
-	    }
+		$this->xml_obj = simplexml_load_file(self::config_path(), 'SimpleXMLElement', LIBXML_NONET);
 
     	//DB Server and DB Parameters
     	//DB parameters
