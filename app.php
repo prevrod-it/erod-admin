@@ -32,7 +32,7 @@ $loginuserid = $user_info[0];
     <!-- Lightbox for BS5 -->
     <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/bs5lightbox.bundle.min.js"></script>
     <!-- Forms -->
-    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/app_form_send.js"></script>
+    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/app_form_send.js?v=web-auth-1"></script>
     <!-- Main Script -->
     <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/appmain.js"></script>
 </body>

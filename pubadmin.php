@@ -42,7 +42,7 @@ $companyid = $public_data->get_user_company($puser)[0];
     <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/bootstrap.bundle.min.js"></script>
     <!-- Forms -->
     <!--script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/form_validation.js"></script-->
-    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/form_send.js"></script>
+    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/form_send.js?v=web-auth-1"></script>
     <!-- Main Script -->
-    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/main.js"></script>
+    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/main.js?v=web-auth-1"></script>
 </body>

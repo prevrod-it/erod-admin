@@ -29,7 +29,7 @@ $file_path = $core_elements->tree_struct()->mediadir->file;
     <!-- Lightbox for BS5 -->
     <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/bs5lightbox.bundle.min.js"></script>
     <!-- Forms -->
-    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/form_send.js"></script>
+    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/form_send.js?v=web-auth-1"></script>
     <!-- Main Script -->
-    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/main.js"></script>
+    <script src="<?php echo $core_elements->tree_struct()->skindir->publicjs; ?>/main.js?v=web-auth-1"></script>
 </body>

@@ -22,6 +22,14 @@ class Core
 		return is_file($local) ? $local : __DIR__ . '/../../config/config.xml';
 	}
 
+	public static function legacy_app_auth_enabled()
+	{
+		// Global app policy comes only from the tracked configuration, not local credentials.
+		$config = @simplexml_load_file(__DIR__ . '/../../config/config.xml', 'SimpleXMLElement', LIBXML_NONET);
+		return $config !== false && isset($config->legacyappauth)
+			&& strtolower(trim((string)$config->legacyappauth)) === 'true';
+	}
+
 	public static function api_key($client)
 	{
 		if ($client !== 'web' && $client !== 'app') {

@@ -5,6 +5,8 @@ Initialize app
 
 //Resources
 include 'app/code/base/core.php';
+require_once 'app/code/base/webrequestauth.php';
+header('Cache-Control: no-store');
 include 'app/code/base/base.php';
 include 'app/code/base/publicinfo.php';
 include 'app/code/base/publiclists.php';
@@ -137,6 +139,7 @@ if ($currpg == "logout") {
 <html lang="pt">
 
 <head>
+    <meta name="erod-web-csrf" content="<?php echo ($puser > 0 && isset($psession)) ? WebRequestAuth::csrf('public', $puser, $psession) : ''; ?>">
     <meta name="erod-web-api-key" content="<?php echo htmlspecialchars(Core::api_key('web'), ENT_QUOTES, 'UTF-8'); ?>">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

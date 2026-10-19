@@ -110,7 +110,7 @@ These are existing action-based PHP endpoints, not a versioned REST interface. T
 | `appauthapi.php` | `applogin`, `appsescheck`, `applogout`; uses `appusr`/`apppwd` or `appuser`/`appses`. Responses include `appuser`, `appsession`, `ttl`, `authstate`, `autherror`. Login checks driver type, company/user status, and subscription status; the session-allowance helper currently always permits another session. |
 | `appusersapi.php` | `query` reads datasets; `compare` synchronizes supported datasets. Inputs include `userid`, `qid`, and `pref`. |
 | `appreportapi.php` | `emlreport` composes and sends activity reports; inputs include `userid`, `rptType`, and `rptEmail`. This has an external email side effect. |
-| `usersapi.php`, `reportapi.php` | Related web handlers read form POST fields rather than the app endpoints' JSON envelope. |
+| `usersapi.php`, `reportapi.php` | Retired driver web handlers. Always return HTTP 410 with a JSON error before loading dependencies, authenticating, accessing the database, or sending email. Android uses the separate `app*api.php` handlers. |
 | `admin*.php`, `pubadmin*.php` | Administration form handlers for entities, units, users, vehicles, and, on the global side, plans. |
 
 `appusersapi.php` dataset selection:
@@ -128,7 +128,7 @@ These are existing action-based PHP endpoints, not a versioned REST interface. T
 
 For `compare`, `pref` is a JSON-encoded string that `PublicOperations` decodes again into positional record arrays. Synchronization may insert records, close/update existing records, resolve temporary journey/vehicle references, and mark remarks deleted before returning updated lists. **`compare` is a write operation.** Array positions, sentinel records, state values, identifier mappings, and date formats are part of the existing app contract. A complete field-by-field protocol specification still needs to be established against the mobile client.
 
-Responses commonly contain positional arrays; rejected request codes return plain text. Do not assume consistent JSON errors or HTTP status handling. Versioned app requests now validate user/session ownership before reaching data or report operations. Legacy requests retain the API-key-only path until the migration deadline is defined; browser handlers and record-level ownership still require a separate authorization review.
+Responses commonly contain positional arrays; rejected request codes return plain text. Do not assume consistent JSON errors or HTTP status handling. Versioned app requests now validate user/session ownership before reaching data or report operations. Legacy requests retain the API-key-only path until the migration deadline is defined; browser handlers now use their own session/CSRF guard described below; a full audit of legacy record mutations remains separate.
 
 ### Legacy and versioned app authentication
 
@@ -136,7 +136,7 @@ The three `app*api.php` endpoints still accept JSON request bodies, not PHP form
 
 | Request | Additional authentication |
 | --- | --- |
-| `appversion` absent, empty string, or whitespace-only string | Legacy behavior is unchanged |
+| `appversion` absent, empty string, or whitespace-only string | Legacy behavior is unchanged only when `legacyappauth` is enabled |
 | Nonempty string or numeric `appversion` on data/report requests | Positive `userid` and `appses` matching an unexpired public session |
 | Versioned `applogin` | Existing credential, company, user, and subscription checks; no prior session required |
 | Versioned `appsescheck` or `applogout` | Positive `appuser` and matching unexpired `appses`, then the existing action |
@@ -147,13 +147,13 @@ The three `app*api.php` endpoints still accept JSON request bodies, not PHP form
 
 A rejected versioned guard returns HTTP 401 and JSON with `authstate: false` and `autherror`. The auth endpoint also includes `appuser: 0`, `appsession: null`, and `ttl: 0`. Legacy key failures retain the existing plain-text response. Login credential failures retain the existing login response. Successful endpoint response shapes are unchanged.
 
-No deadline has been configured yet. Omitting the version still selects legacy authentication, so session enforcement is not universal until that fallback is removed. Login remains the exception when the migration ends. No new database indexes were created: index availability and production query performance require verification against a safe environment.
+Legacy access is controlled globally for all three app endpoints by `<legacyappauth>true</legacyappauth>` directly under `<core>` in `app/config/config.xml` only. It is enabled in this checkout. Set it to `false` to reject all app requests without a version, including legacy login; missing or invalid settings also disable legacy access. Only the text `true` enables it (case-insensitive, surrounding whitespace ignored). This switch deliberately ignores `config.local.xml`; edit only `config.xml` to change it. Disabled legacy requests retain the existing plain-text unauthorized response. Versioned login and session validation are unchanged, and web login is unaffected. No automatic deadline is configured; turn the switch off when the migration ends. While enabled, omitting the version still selects legacy authentication. Login remains the exception when the migration ends. No new database indexes were created: index availability and production query performance require verification against a safe environment.
 
 Run `php tests/apprequestauth_test.php` for isolated authentication tests. They use synthetic inputs, callback/connection doubles, and no database or application requests. They cover legacy compatibility, malformed values, mismatched identities/tokens, session lookup results, login exemption, auth actions, parameter binding, and error responses. They do not verify a real SQL execution plan or end-to-end Android behavior.
 
 ### API key configuration
 
-**Sanitized checkpoint (2026-10-15):** tracked `config.xml` contains empty database/API-key fields and a non-secret `appdemo` display setting. Copy it to ignored `app/config/config.local.xml` and supply the environment-specific database settings and both keys there. `Core::config_path()` prefers that local file for database and API configuration, falling back to `config.xml` only when no local file exists. The local file fully replaces the tracked configuration; it is not a field-by-field overlay. Existing local values were preserved without rotation. Deployments must supply their own local file before running this version. Do not commit or overwrite that file during deployment. This does not remove secrets already present in Git history.
+**Sanitized checkpoint (2026-10-15):** tracked `config.xml` contains empty database/API-key fields and a non-secret `appdemo` display setting. Copy it to ignored `app/config/config.local.xml` and supply the environment-specific database settings and both keys there. `Core::config_path()` prefers that local file for database and API configuration, falling back to `config.xml` only when no local file exists. The local file fully replaces database/API-key and demo-display configuration; it is not a field-by-field overlay. The global `legacyappauth` switch is the exception and is always read directly from tracked `config.xml`. Existing local values were preserved without rotation. Deployments must supply their own local file before running this version. Do not commit or overwrite that file during deployment. This does not remove secrets already present in Git history.
 
 
 `app/config/config.xml` contains an `apikeys` element alongside `dbconnection`, with separate `web` and `app` child elements. All 14 processing endpoints read the relevant value through `Core::api_key()` without initializing a database connection. Existing key values were moved unchanged; no keys were rotated and no production branch was edited.
@@ -163,6 +163,33 @@ Browser pages expose only the web key in an HTML meta tag, and the browser scrip
 Populate both keys independently in demo and production before deploying this code. When first merging into `main`, preserve its database settings and add the new `apikeys` fields using the existing production client keys. Restoring an older configuration without those fields will cause all processing requests to be rejected. Different environment keys require matching clients; this refactor does not automatically generate or distribute new keys.
 
 `app/config/.htaccess` denies HTTP access to configuration files on Apache 2.4 when overrides permit authorization directives. Verify this protection in the deployment configuration; PHP can still read the file locally. Credentials and keys belong in the ignored local XML file; the tracked XML is sanitized. The `merge=ours` limitations and deliberate merge workflow above apply to keys as well as database parameters.
+
+## Browser processing authentication
+
+The nine active administration handlers in `app/code/processing/` call `WebRequestAuth::require_request()` before business logic. The retired driver web handlers `usersapi.php` and `reportapi.php` exit unconditionally with HTTP 410 before any includes; their previous code is retained but unreachable. The three `app*api.php` handlers retain their separate legacy/versioned app authentication.
+
+Each browser processing request must be POST and pass all of these checks:
+
+1. The existing `reqcode` must match the configured web key. This shared code remains a request marker, not a cryptographic signature or proof of user identity.
+2. The browser automatically sends the appropriate same-origin session cookie. The server validates its user ID and hash against an unexpired database session and an active, non-deleted account. Public sessions also require an active, non-deleted company.
+3. A session-bound CSRF token is rendered as `erod-web-csrf` page metadata and sent in the POST `csrf` field. It is an HMAC scoped to the role and user, keyed by the existing session token. It does not expose that token. A token from another session or role is rejected. Pages containing it use `Cache-Control: no-store`.
+4. Endpoint role and target ownership checks run before mutations. The caller ID comes from the validated cookie, not a posted identity claim.
+
+| Handlers | Identity and scope |
+| --- | --- |
+| `adminentity`, `adminopunit`, `adminplans`, `adminpubusers`, `adminvehicles` | `adminactivesession` with `sessions`/`users`; retain the existing global-administrator access model |
+| `pubadminentity`, `pubadminopunit`, `pubadminpubusers`, `pubadminvehicles` | `publicactivesession` with `publicsessions`/`publicusers`; company administrators only, with existing item and destination-company ownership checks |
+| `usersapi`, `reportapi` | Disabled for all callers, including authenticated drivers: HTTP 410. The driver web homepage continues to show the mobile-app notice. |
+
+Client-admin operating-unit assignments are checked against the same company. Global-admin fine-grained permission strings are not interpreted because no established enforcement model was found in the existing handlers. Existing business validations remain in place; this change is not a full SQL-injection or business-permission audit of the legacy mutation methods.
+
+The database identity lookup uses a prepared, read-only query and reuses `Core`'s connection. It does not extend expiry; existing page/session-renewal logic still does. Client ownership and sync checks add queries proportional to affected references. Verify session/ownership indexes and execution plans on an isolated database before making performance claims. The helper uses MySQLi `get_result()` (mysqlnd required).
+
+Failures return HTTP 401 (key/session/CSRF/role), 403 (target scope), or 405 (non-POST), with a JSON error array compatible with the form convention. Browser scripts stop response parsing and show a reload/login message on 401/403. Existing successful response layouts are unchanged. Refresh pages after deployment to obtain the CSRF metadata and updated JavaScript; the main script includes have versioned URLs. No mobile client changes are required for this web-only guard.
+
+For another application, reuse the separation of responsibilities: request-code check, session lookup, session-bound CSRF, then endpoint-specific authorization. Adapt the endpoint allowlist, cookie names, session/account SQL, and ownership rules to that application's data model. Do not copy real configuration or session values. The existing cookie issuance/token-generation scheme is unchanged and should be reviewed separately when modernizing authentication.
+
+Run `php tests/webrequestauth_test.php` for isolated regression checks covering all 11 endpoint mappings, invalid keys/cookies/CSRF, expired-session results, role separation, company boundaries, nested sync ownership, and prepared lookup statements. No production requests or database connections are used in these tests; browser/database integration remains to be validated in a safe environment.
 
 ## Data model and authentication
 

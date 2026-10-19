@@ -23,9 +23,19 @@ $lookup = function ($user, $session) use (&$calls, $token) {
 $valid = array('reqcode' => $key, 'appversion' => '2.0.0', 'userid' => 7, 'appses' => $token);
 foreach (array(array('reqcode' => $key), array('reqcode' => $key, 'appversion' => ''),
     array('reqcode' => $key, 'appversion' => '  ')) as $legacy) {
-    verify(AppRequestAuth::authorize($legacy, $key, 'data', $lookup), 'Legacy request rejected');
+    verify(AppRequestAuth::authorize($legacy, $key, 'data', $lookup, true), 'Legacy request rejected');
 }
 verify($calls === 0, 'Legacy requests queried sessions');
+foreach (array('data', 'auth') as $endpoint) {
+    foreach (array(null, '', '  ') as $version) {
+        $legacy = array('reqcode' => $key, 'qaction' => 'applogin');
+        if ($version !== null) { $legacy['appversion'] = $version; }
+        verify(!AppRequestAuth::authorize($legacy, $key, $endpoint, $lookup, false), 'Disabled legacy accepted');
+        verify(AppRequestAuth::authorize($legacy, $key, $endpoint, $lookup, true), 'Enabled legacy rejected');
+        verify(!AppRequestAuth::authorize($legacy, 'wrong-key', $endpoint, $lookup, true), 'Legacy bypassed key validation');
+    }
+}
+verify($calls === 0, 'Legacy toggle caused session lookups');
 verify(AppRequestAuth::authorize($valid, $key, 'data', $lookup), 'Valid session rejected');
 verify($calls === 1, 'Data request did not use exactly one lookup');
 foreach (array('reqcode' => 'wrong', 'appversion' => array(), 'userid' => '7 OR 1=1',

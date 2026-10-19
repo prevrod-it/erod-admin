@@ -5,6 +5,8 @@ Initialize app
 
 //Resources
 include 'app/code/base/core.php';
+require_once 'app/code/base/webrequestauth.php';
+header('Cache-Control: no-store');
 include 'app/code/base/base.php';
 include 'app/code/base/admininfo.php';
 include 'app/code/base/adminlists.php';
@@ -142,6 +144,7 @@ if ($currpg == "logout") {
 <html lang="pt">
 
 <head>
+    <meta name="erod-web-csrf" content="<?php echo ($user > 0 && isset($session)) ? WebRequestAuth::csrf('admin', $user, $session) : ''; ?>">
     <meta name="erod-web-api-key" content="<?php echo htmlspecialchars(Core::api_key('web'), ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Prevrod - Sistema de registo de atividade de condução.">

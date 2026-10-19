@@ -1,4 +1,11 @@
 <?php
+// Retired driver web endpoint. Android uses the separate app*api.php handlers.
+http_response_code(410);
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
+echo json_encode(array(array(0, 'Esta funcionalidade web foi desativada. Utilize a app.')));
+exit;
+
 //Include validation functions
 include '../base/functions/validations.php';
 //Include mail functions
@@ -7,14 +14,10 @@ include '../base/functions/sendmail.php';
 
 //Authentication
 require_once __DIR__ . '/../base/core.php';
-$matchcode = Core::api_key('web');
-if (isset($_POST['reqcode'])) {
-    $reqcode = $_POST['reqcode'];
-} else {
-	$reqcode = "";
-}
+require_once __DIR__ . '/../base/webrequestauth.php';
+$web_user = WebRequestAuth::require_request(basename(__FILE__));
 
-if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode)) {
+if ($web_user) {
 	/*
 	Initialize app
 	*/

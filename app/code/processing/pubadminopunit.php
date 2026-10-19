@@ -3,14 +3,10 @@
 include '../base/functions/validations.php';
 //Authentication
 require_once __DIR__ . '/../base/core.php';
-$matchcode = Core::api_key('web');
-if (isset($_POST['reqcode'])) {
-    $reqcode = $_POST['reqcode'];
-} else {
-    $reqcode = "";
-}
+require_once __DIR__ . '/../base/webrequestauth.php';
+$web_user = WebRequestAuth::require_request(basename(__FILE__));
 
-if ($matchcode !== '' && is_string($reqcode) && hash_equals($matchcode, $reqcode)) {
+if ($web_user) {
     /*
     Initialize app
     */

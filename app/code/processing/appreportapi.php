@@ -12,7 +12,7 @@ $matchcode = Core::api_key('app');
 $json_form_data = file_get_contents('php://input');
 $form_data = json_decode($json_form_data, true);
 
-if (AppRequestAuth::authorize($form_data, $matchcode, 'data', array('Core', 'has_public_session'))) {
+if (AppRequestAuth::authorize($form_data, $matchcode, 'data', array('Core', 'has_public_session'), Core::legacy_app_auth_enabled())) {
 	/*
 	Initialize app
 	*/

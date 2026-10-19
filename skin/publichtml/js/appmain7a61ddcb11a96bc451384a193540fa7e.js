@@ -399,12 +399,17 @@ function queryapi(apiscript,userid,qaction,qid,pref) {
   reqfields.append("qid", qid);
   reqfields.append("pref", pref);
   reqfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
+  reqfields.append("csrf", document.querySelector('meta[name="erod-web-csrf"]').content);
 
   var reqsend = new XMLHttpRequest();
   var url = "/app/code/processing/" + apiscript;
   reqsend.open("POST", url, true);
   reqsend.send(reqfields); 
   reqsend.onreadystatechange = function() {
+      if (this.readyState === 4 && (this.status === 401 || this.status === 403)) {
+        alert("Pedido não autorizado. Atualize a página ou inicie sessão novamente.");
+        return;
+      }
     if (reqsend.readyState == 4) {
       var reqsendresp = JSON.parse(this.responseText);
       respstr = JSON.stringify(reqsendresp);

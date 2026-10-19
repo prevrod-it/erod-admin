@@ -7,7 +7,7 @@ class AppRequestAuth
             || (is_string($data['appversion']) && trim($data['appversion']) === ''));
     }
 
-    public static function authorize($data, $key, $endpoint, $check_session)
+    public static function authorize($data, $key, $endpoint, $check_session, $allow_legacy = false)
     {
         if (!is_array($data) || !is_string($key) || $key === ''
             || !isset($data['reqcode']) || !is_string($data['reqcode'])
@@ -15,7 +15,7 @@ class AppRequestAuth
             return false;
         }
         if (self::is_legacy($data)) {
-            return true;
+            return $allow_legacy === true;
         }
         // Any supplied version opts in; malformed values must not downgrade to legacy.
         if (!is_string($data['appversion']) && !is_int($data['appversion'])

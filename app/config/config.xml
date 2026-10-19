@@ -11,5 +11,6 @@
 		<app></app>
 	</apikeys>
 	<appdemo>true</appdemo>
+	<legacyappauth>true</legacyappauth>
 </core>
 

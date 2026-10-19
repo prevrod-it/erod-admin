@@ -8,12 +8,17 @@ window.addEventListener("DOMContentLoaded", function() {
     var loadinngmsg = "A processar os dados...";
     var formfields =  new FormData(curform);
     formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
+    formfields.append("csrf", document.querySelector('meta[name="erod-web-csrf"]').content);
 
     var formsend = new XMLHttpRequest();
     var url = "/app/code/processing/" + procscript;
     formsend.open("POST", url, true);
     formsend.send(formfields);
     formsend.onreadystatechange = function() {
+      if (this.readyState === 4 && (this.status === 401 || this.status === 403)) {
+        alert("Pedido não autorizado. Atualize a página ou inicie sessão novamente.");
+        return;
+      }
       var fstatus = curform.querySelector("#form_status");       
       if(formsend.readyState < 4) {
         fstatus.innerHTML = loadinngmsg;
@@ -88,12 +93,17 @@ window.addEventListener("DOMContentLoaded", function() {
       var formfields =  new FormData(curform);
       formfields.set("formaction", "delete");
       formfields.append("reqcode", document.querySelector('meta[name="erod-web-api-key"]').content);
+      formfields.append("csrf", document.querySelector('meta[name="erod-web-csrf"]').content);
 
       var formsend = new XMLHttpRequest();
       var url = "/app/code/processing/" + procscript;
       formsend.open("POST", url, true);
       formsend.send(formfields);
       formsend.onreadystatechange = function() {
+      if (this.readyState === 4 && (this.status === 401 || this.status === 403)) {
+        alert("Pedido não autorizado. Atualize a página ou inicie sessão novamente.");
+        return;
+      }
         var fstatus = curform.querySelector("#form_status");       
         if(formsend.readyState < 4) {
           fstatus.innerHTML = loadinngmsg;
