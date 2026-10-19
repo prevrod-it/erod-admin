@@ -81,8 +81,8 @@ if (!isset($_COOKIE["adminactivesession"]) || $user <= 0) {
     if ($loginact == 1) {
         if (strlen($usr) >= 6) {
             if ((strlen($pwd) == (strlen($pwdenc) - 5)/2) && strlen($pwd) > 0) {
-                $decpwd = $core_elements->decrypt_pwd($pwdenc);
-                $user = $core_elements->get_user($usr,$decpwd);
+                $decpwd = $core_elements->decrypt_pwd($pwdenc, true);
+                $user = ($decpwd === "_ERROR_") ? -2 : $core_elements->get_user($usr,$decpwd);
                 if ($user > 0) {    
                     //Verify existing user sessions
                     $usersesallowed = $core_elements->user_session_allowed($user);
@@ -97,7 +97,9 @@ if (!isset($_COOKIE["adminactivesession"]) || $user <= 0) {
                     $_POST = array(); $loginact = 0;
                 } else {
                     $user = -2;
-                    $login_err = "Dados de acesso inválidos!";    
+                    $login_err = ($decpwd === "_ERROR_")
+                        ? "Erro na data e hora!"
+                        : "Dados de acesso inválidos!";
                 } 
             } else {
                 $user = -2;

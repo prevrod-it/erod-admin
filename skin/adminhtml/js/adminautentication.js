@@ -53,6 +53,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
   /*----------  SEND LOGIN FORM  ----------*/
   var loginFormSend = function(ev) {   
+    ev.preventDefault();
     var curform = this.form;
     var pwdfld = document.getElementById('pwd');
     var pwdencfld = document.getElementById('vardumb');

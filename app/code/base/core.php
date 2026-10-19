@@ -259,7 +259,7 @@ class Core
 		$result = self::$mysqli->query("UPDATE publicsessions SET iSESexp = '-1' WHERE iSESuserid = '$user' AND sSEShash = '$session'");
 	}
 
-	public function decrypt_pwd($pwdencraw)
+	public function decrypt_pwd($pwdencraw, $webutc = false)
 	{
 		$pwdenc = substr($pwdencraw,0,strlen($pwdencraw) - 5);
 		$pwd = "";
@@ -269,6 +269,12 @@ class Core
 
 		$tc = date("iwH");
 		$tcc = strrev(substr($pwdencraw,-5));
+		$timevalid = ($tc == $tcc);
+		if ($webutc) {
+			// Admin browser encodes UTC; allow a minute either side for transit/clock skew.
+			$now = time();
+			$timevalid = in_array($tcc, array(gmdate('iwH', $now - 60), gmdate('iwH', $now), gmdate('iwH', $now + 60)), true);
+		}
 
 		for ($i=0; $i < strlen($pwdenc); $i++) { 
 			if ($i % 2 == 0) {
@@ -290,7 +296,7 @@ class Core
 			$numseqcomp .= ($i % 10);
 		}
 
-		if ($tc == $tcc && $numseq == $numseqcomp) {
+		if ($timevalid && $numseq == $numseqcomp) {
 			$pwd = strrev($pwdinv);
 		} else {
 			$pwd = "_ERROR_";

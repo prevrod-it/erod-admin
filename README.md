@@ -200,6 +200,12 @@ There is no verified one-command installation process. Before running the applic
 
 ## Verification for future changes
 
+### Web login diagnostics (2026-10-16)
+
+Admin and public-site JavaScript encode a UTC time code. Both `backend.php` and `frontend.php` call `decrypt_pwd(..., true)` to validate UTC with a one-minute allowance either side, independent of the PHP timezone. Numeric-sequence validation remains enforced. A decoding rejection produces a request/clock-validation message and does not attempt a credential lookup. The standard invalid-credentials message remains for database credential rejections. Both button handlers cancel their default submission before submitting the encoded form.
+
+The decoder's default behavior, used by the mobile app, is unchanged. Run `node tests/admin_login_test.js` for the admin encoder and `node tests/admin_login_test.js --public` for the public-site encoder against the PHP decoder without database access. These checks verify UTC/timezone handling and stale/malformed rejection, not real user credentials or deployed login success.
+
 Start with `git status --short` and preserve unrelated work. PHP syntax checks can be run without executing the application, using the target runtime, for example:
 
 ```powershell
